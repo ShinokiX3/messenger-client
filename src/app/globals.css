@@ -317,8 +317,13 @@
 	--preview-content-w: calc(var(--grid-side-w) - var(--preview-image-w) - 80px);
 
 	--send-status-ico-wxh: 0.87rem;
-	--side-content-vh-h: calc(
+	/* --side-content-vh-h: calc(
 		100vh - var(--search-input-h) - var(--side-header-p-lxr) * 2 -
+			var(--tab-padding-txb) * 2 - var(--side-content-p-txb) * 2 - 24px
+	); */
+
+	--side-content-vh-h: calc(
+		100dvh - var(--search-input-h) - var(--side-header-p-lxr) * 2 -
 			var(--tab-padding-txb) * 2 - var(--side-content-p-txb) * 2 - 24px
 	);
 
