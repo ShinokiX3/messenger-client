@@ -66,7 +66,7 @@ export const Message: React.FC<IMessage> = ({
 										? value.substring(0, carret) +
 										  emoji +
 										  value.substring(carret)
-										: value;
+										: value + emoji;
 									handlerInput(v);
 									setEmojiPicker(false);
 								}}
