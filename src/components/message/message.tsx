@@ -19,7 +19,7 @@ interface IMessage {
 
 interface IStyledMessage {
 	text: string;
-	time: Date | null;
+	time?: Date | null;
 }
 
 const Onw: React.FC<IStyledMessage> = ({ text, time }) => {

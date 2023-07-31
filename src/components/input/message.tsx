@@ -1,3 +1,5 @@
+import EmojiPicker from '@emoji-mart/react';
+import data from '@emoji-mart/data';
 import { faFaceSmile } from '@fortawesome/free-regular-svg-icons';
 import {
 	faMicrophone,
@@ -5,7 +7,7 @@ import {
 	faPaperclip,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 interface IMessage {
 	value: string;
@@ -18,13 +20,18 @@ export const Message: React.FC<IMessage> = ({
 	handlerInput,
 	handlerSend,
 }) => {
-	const [isTyping, setIsTyping] = useState(false);
+	const [isTyping, setIsTyping] = useState<boolean>(false);
+	const [emojiPicker, setEmojiPicker] = useState<boolean>(false);
+	const ref = useRef<HTMLInputElement | null>(null);
+
 	return (
 		<div className="flex items-center justify-center w-full gap-[0.5rem]">
 			<div className="relative w-full shadow-message-shadow">
 				<input
+					ref={ref}
 					type="text"
 					value={value}
+					placeholder="Message"
 					onChange={(e) => handlerInput(e.target.value)}
 					onKeyDown={(e) => {
 						if (e.key === 'Enter') handlerSend();
@@ -32,15 +39,41 @@ export const Message: React.FC<IMessage> = ({
 					className="p-message-input-p px-[55px] leading-[1.3125]
                     bg-theme-side-bg-color rounded-message-border-radius w-full
                     focus:outline-none rounded-br-none"
-					placeholder="Message"
 				/>
-				<FontAwesomeIcon
-					className="absolute left-0 top-[50%] text-message-control-fs 
-                    translate-x-message-control-pos-l translate-y-[-50%]
-                    text-color-composer-button hover:text-color-primary 
-                    cursor-pointer hover:cursor-default"
-					icon={faFaceSmile}
-				/>
+				<div>
+					<FontAwesomeIcon
+						icon={faFaceSmile}
+						className={`absolute left-0 top-[50%] text-message-control-fs 
+						translate-x-message-control-pos-l translate-y-[-50%]
+						text-color-composer-button hover:text-color-primary 
+						cursor-pointer hover:cursor-default`}
+						style={emojiPicker ? { color: 'var(--color-primary)' } : {}}
+						onClick={() => setEmojiPicker(!emojiPicker)}
+						onMouseOver={() => setEmojiPicker(true)}
+					/>
+					{emojiPicker ? (
+						<div className="absolute bottom-[115%]">
+							<EmojiPicker
+								data={data}
+								previewPosition="none"
+								searchPosition="static"
+								onClickOutside={() => setEmojiPicker(false)}
+								onEmojiSelect={(e: any) => {
+									const emoji = e.native;
+									const input = ref.current;
+									const carret = input ? input.selectionStart : null;
+									const v = carret
+										? value.substring(0, carret) +
+										  emoji +
+										  value.substring(carret)
+										: value;
+									handlerInput(v);
+									setEmojiPicker(false);
+								}}
+							/>
+						</div>
+					) : null}
+				</div>
 				<FontAwesomeIcon
 					className="absolute right-0 top-[50%] text-message-control-fs 
                     translate-x-message-control-pos-r translate-y-[-50%]
