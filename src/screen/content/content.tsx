@@ -303,6 +303,7 @@ const Content: React.FC<IContent> = ({ clear = false, room }) => {
 									key={message?.messageId}
 									type="own"
 									text={message?.message}
+									time={message.writed}
 								/>
 							);
 						if (message?.userId !== user._id)
@@ -311,6 +312,7 @@ const Content: React.FC<IContent> = ({ clear = false, room }) => {
 									key={message?.messageId}
 									type="stranger"
 									text={message?.message}
+									time={message.writed}
 								/>
 							);
 					});

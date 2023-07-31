@@ -13,14 +13,16 @@ type TSystemImportance = 'date' | 'usual' | 'regular';
 interface IMessage {
 	type?: TMessageType;
 	text: string;
+	time?: Date | null;
 	importance?: TSystemImportance;
 }
 
 interface IStyledMessage {
 	text: string;
+	time: Date | null;
 }
 
-const Onw: React.FC<IStyledMessage> = ({ text }) => {
+const Onw: React.FC<IStyledMessage> = ({ text, time }) => {
 	return (
 		<div
 			className="mb-s-message-m-b p-s-message-out-p w-fit
@@ -35,7 +37,7 @@ const Onw: React.FC<IStyledMessage> = ({ text }) => {
 					px-[0.25rem] ml-[0.4375rem] mr-[-0.5rem]"
 				>
 					<p className="text-small-ltime-fs mr-[0.1875rem] leading-none">
-						{parseToStringTime(new Date())}
+						{parseToStringTime(time ? new Date(time) : new Date())}
 					</p>
 					<ReadStatus status={'read'} color="white" />
 					<Appendix color="--color-bg-s-message" />
@@ -45,7 +47,7 @@ const Onw: React.FC<IStyledMessage> = ({ text }) => {
 	);
 };
 
-const Stranger: React.FC<IStyledMessage> = ({ text }) => {
+const Stranger: React.FC<IStyledMessage> = ({ text, time }) => {
 	return (
 		<div className="grid grid-cols-s-message-grid-t-col">
 			<div
@@ -66,7 +68,7 @@ const Stranger: React.FC<IStyledMessage> = ({ text }) => {
                         px-[0.25rem] ml-[0.4375rem] mr-[-0.5rem]"
 					>
 						<p className="text-small-ltime-fs mr-[0.1875rem] leading-none">
-							{parseToStringTime(new Date())}
+							{parseToStringTime(time ? new Date(time) : new Date())}
 						</p>
 						<ReadStatus status={'read'} color="white" />
 						<Appendix color="--theme-side-bg-color" side="right" />
@@ -102,12 +104,13 @@ const Message: React.FC<IMessage> = ({
 	type = 'own',
 	importance = 'regular',
 	text,
+	time = null,
 }) => {
 	if (type === 'system') return <System text={text} type={importance} />;
 
-	if (type === 'own') return <Onw text={text} />;
+	if (type === 'own') return <Onw text={text} time={time} />;
 
-	if (type === 'stranger') return <Stranger text={text} />;
+	if (type === 'stranger') return <Stranger text={text} time={time} />;
 
 	return null;
 };
