@@ -88,6 +88,7 @@ module.exports = {
 				'personal-input-padding': 'var(--personal-input-padding)',
 				'auth-height': 'var(--auth-height)',
 				'spinner-size': 'var(--spinner-size)',
+				'screen-dvh': 'var(--screen-dvh)',
 			},
 			scale: {
 				'default-font-weight': 'var(--default-font-weight)',

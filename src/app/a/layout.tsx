@@ -14,9 +14,11 @@ async function getResources() {
 	return res.json();
 }
 
+// TODO: trying dvh value, prev value is h-screen
+
 export default function ALayout({ children }: { children: React.ReactNode }) {
 	return (
-		<main className="grid grid-cols-grid-side-medium h-screen main-mobile-overflow">
+		<main className="grid grid-cols-grid-side-medium h-screen-dvh main-mobile-overflow">
 			<Menu />
 			{children}
 		</main>

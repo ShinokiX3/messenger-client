@@ -257,6 +257,7 @@
 	--side-content-p-lxr: 0.4375rem;
 
 	--auth-height: calc(100vh + 15rem);
+	--screen-dvh: 100dvh;
 	/* --auth-height: 100dvh; */
 
 	--preview-padding: 0.5625rem;
