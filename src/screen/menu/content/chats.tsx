@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import MenuWrapper from '../wrapper';
 import Preview, { IPreview } from '@/components/preview/preview';
 import { IChat } from '../menu';
@@ -21,6 +21,8 @@ const MenuChats: React.FC<IMenuChats> = ({ animate = false, chats = [] }) => {
 	const [active, setActive] = useState('');
 	const [shouldShow, setShouldShow] = useState(false);
 	const [styles, setStyles] = useState<{ [key: string]: string } | {}>({});
+
+	const ref = useRef<HTMLDivElement | null>(null);
 
 	const memochats = useMemo(() => {
 		if (chats.length < 1) return [];
@@ -59,7 +61,10 @@ const MenuChats: React.FC<IMenuChats> = ({ animate = false, chats = [] }) => {
 		return () => window.removeEventListener('click', handleClick);
 	}, []);
 
+	// TODO: move to utils
+
 	const calcHeight = (y: number, iH: number) => {
+		// TODO: create reference for context menu for getting its height
 		const blockH = 270;
 		if (iH - y > blockH && y - blockH > 0) return `${y}px`;
 		if (iH - y < blockH && y - blockH > 0) return `${y - blockH}px`;
@@ -67,26 +72,40 @@ const MenuChats: React.FC<IMenuChats> = ({ animate = false, chats = [] }) => {
 		else return `${y}px`;
 	};
 
+	const calcLeft = (x: number, oW: number) => {
+		// TODO: create reference for context menu for getting its height
+		const blockW = 220;
+		console.log(x, oW);
+
+		if (x + blockW > oW && x - blockW > 0) return `${x - blockW}px`;
+		// if (x + blockW < oW && x - blockW < 0) return `${x + 220}px`;
+		else return `${x}px`;
+	};
+
 	return (
 		<MenuWrapper items={chats?.length}>
 			<div
+				ref={ref}
 				className={`${animate ? 'menu-content-appearance-effect-b' : ''}`}
 				onContextMenu={(e) => {
 					setShouldShow(false);
 					e.preventDefault();
 
+					const chatsBlock = ref.current;
+
 					const x = e.pageX;
 					const y = e.pageY;
 
-					const innerWidth = window.innerWidth;
+					const offsetWidth = chatsBlock
+						? chatsBlock.offsetWidth
+						: window.innerWidth;
 					const innerHeight = window.innerHeight;
-					console.log(x, y, innerWidth);
 
 					setStyles({
-						left: `${x}px`,
+						left: calcLeft(x, offsetWidth),
 						top: calcHeight(y, innerHeight),
 						bottom: 'auto',
-						width: '220px',
+						width: 220,
 						zIndex: '25',
 						backdropFilter: 'blur(5px)',
 					});

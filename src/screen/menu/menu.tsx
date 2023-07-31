@@ -78,6 +78,8 @@ const Menu = () => {
 	const menuW = useMemo(() => `${user.ui?.menuW}`, [user.ui.menuW]);
 
 	useEffect(() => {
+		// TODO: mobile test
+		setShouldHideContent(true);
 		(async () => {
 			const eventSource = new EventSource(
 				`https://messenger-server-production-06a1.up.railway.app/chat/connection`
