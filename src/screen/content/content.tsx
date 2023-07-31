@@ -67,6 +67,8 @@ interface IContent {
 	room?: string;
 }
 
+let timeout: ReturnType<typeof setTimeout> | null = null;
+
 const Content: React.FC<IContent> = ({ clear = false, room }) => {
 	const socket = useMemo(
 		() => io('https://messenger-server-production-06a1.up.railway.app'),
@@ -108,9 +110,7 @@ const Content: React.FC<IContent> = ({ clear = false, room }) => {
 	}, [room]);
 
 	useEffect(() => {
-		if (room) {
-			join(user.name, room);
-		}
+		if (room) join(user.name, room);
 	}, [room]);
 
 	useEffect(() => {
@@ -151,6 +151,10 @@ const Content: React.FC<IContent> = ({ clear = false, room }) => {
 		if (messageLast) messageLast.scrollIntoView({ behavior: 'smooth' });
 	}, [messages]);
 
+	useEffect(() => {
+		if (messageInput !== '') handleTyping();
+	}, [messageInput]);
+
 	const join = (username: string, room: string) => {
 		socket.emit('join', { name: username, room }, (names: string[]) => {
 			setJoined(true);
@@ -169,12 +173,11 @@ const Content: React.FC<IContent> = ({ clear = false, room }) => {
 		}
 	};
 
-	let timeout: any;
-
 	const handleTyping = () => {
-		socket.emit('typing', { isTyping: true }, () => {});
+		socket.emit('typing', { room: room, isTyping: true }, () => {});
+		if (timeout) clearTimeout(timeout);
 		timeout = setTimeout(() => {
-			socket.emit('typing', { isTyping: false });
+			socket.emit('typing', { room: room, isTyping: false });
 		}, 2000);
 	};
 
@@ -242,7 +245,7 @@ const Content: React.FC<IContent> = ({ clear = false, room }) => {
 					<div className="flex flex-col justify-center items-start">
 						<p className="font-medium text-[1.125rem] leading-none">{title}</p>
 						<p className="text-[0.875rem] text-color-message">
-							waiting for network...
+							{typingDisplay ? typingDisplay : 'Online'}
 						</p>
 					</div>
 				</div>

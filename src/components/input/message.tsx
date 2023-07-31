@@ -5,7 +5,7 @@ import {
 	faPaperclip,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React from 'react';
+import React, { useState } from 'react';
 
 interface IMessage {
 	value: string;
@@ -18,6 +18,7 @@ export const Message: React.FC<IMessage> = ({
 	handlerInput,
 	handlerSend,
 }) => {
+	const [isTyping, setIsTyping] = useState(false);
 	return (
 		<div className="flex items-center justify-center w-full gap-[0.5rem]">
 			<div className="relative w-full shadow-message-shadow">
