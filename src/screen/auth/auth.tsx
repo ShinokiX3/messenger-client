@@ -5,69 +5,9 @@ import Button from '@/components/button/button';
 import { useRouter } from 'next/navigation';
 import { useActions } from '@/hooks/useActions';
 import Spinner from '@/ui/spinner';
+import CountryItem, { countries } from '@/ui/context/variables/country';
 
 // TODO: move to new component / file
-
-interface ICountry {
-	title: string;
-	value: string;
-}
-
-const countries: ICountry[] = [
-	{ title: 'Ukraine', value: '+380' },
-	{ title: 'USA', value: '+1' },
-	{ title: 'United Kingdom', value: '+44' },
-	{ title: 'Japan', value: '+81' },
-];
-
-interface IFlags {
-	[key: string]: {
-		src: string;
-		alt: string;
-	};
-}
-
-const flags: IFlags = {
-	'United Kingdom': {
-		src: 'https://web.telegram.org/a/img-apple-160/1f1ec-1f1e7.png',
-		alt: 'United Kingdom',
-	},
-	Ukraine: {
-		src: 'https://web.telegram.org/a/img-apple-160/1f1fa-1f1e6.png',
-		alt: 'Ukraine',
-	},
-	USA: {
-		src: 'https://web.telegram.org/a/img-apple-160/1f1fa-1f1f8.png',
-		alt: 'USA',
-	},
-	Japan: {
-		src: 'https://web.telegram.org/a/img-apple-160/1f1ef-1f1f5.png',
-		alt: 'Japan',
-	},
-};
-
-const CountryItem = ({ item }: { item: TSelectItem }) => {
-	return (
-		<div
-			className="flex justify-between items-center px-[0.25rem] 
-			text-[0.875rem] font-medium"
-		>
-			<div className="flex items-center">
-				<Image
-					width={32}
-					height={32}
-					loader={() => flags[item.title].src}
-					src={flags[item.title].src}
-					alt={flags[item.title].alt}
-				/>
-				<p className="ml-[5px]">{item.title}</p>
-			</div>
-			<div>
-				<p className="opacity-[0.5]">{item.value}</p>
-			</div>
-		</div>
-	);
-};
 
 const Auth = () => {
 	const [loading, setLoading] = useState(false);

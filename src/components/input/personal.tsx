@@ -1,3 +1,5 @@
+import ContextElement from '@/ui/context/element';
+import ContextWrapper from '@/ui/context/wrapper';
 import React, { useState } from 'react';
 
 interface IWrapper {
@@ -103,23 +105,16 @@ const Select: React.FC<ISelect> = ({
 				onBlur={() => setShouldShow(false)}
 			/>
 			{shouldShow ? (
-				<div
-					className="absolute top-[120%] left-0 bg-compact-bg-color 
-                    w-full h-fit z-[15] p-[0.25rem] shadow-compact-menu-shadow max-h-[23.5rem]
-                    rounded-default-border-radius backdrop-blur-[10px] compact-menu-appearance-effect
-					scrollbar overflow-auto"
-				>
+				<ContextWrapper>
 					{items.map((item) => (
-						<div
+						<ContextElement
 							key={item.value}
-							className="text-white p-[0.25rem] hover:bg-[#00000066] 
-							cursor-pointer rounded-[0.375rem]"
 							onMouseDown={() => selectHandler(item)}
 						>
 							{Element ? <Element item={item} /> : <SelectItem item={item} />}
-						</div>
+						</ContextElement>
 					))}
-				</div>
+				</ContextWrapper>
 			) : null}
 		</Wrapper>
 	);

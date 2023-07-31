@@ -17,6 +17,7 @@ import UsersSearch from './search/user';
 import FriendsSlider from './search/friends';
 import Slider from './slider';
 import { useActions } from '@/hooks/useActions';
+import ContextChat from '@/components/context/chat';
 
 // TODO: temporary solution
 
@@ -64,6 +65,7 @@ const Menu = () => {
 	const [animate, setAnimate] = useState<boolean>(false);
 	const [search, setSearch] = useState<string>('');
 	const [chats, setChats] = useState<IChat[]>([]);
+	const [shouldShow, setShouldShow] = useState(false);
 
 	const [reload, setReload] = useState('');
 	const ref = useRef(null);
@@ -78,7 +80,7 @@ const Menu = () => {
 	useEffect(() => {
 		(async () => {
 			const eventSource = new EventSource(
-				`https://messenger-server-six.vercel.app/chat/connection`
+				`https://messenger-server-production-06a1.up.railway.app/chat/connection`
 			);
 			eventSource.onmessage = (event: any) => {
 				const message = JSON.parse(event.data);
