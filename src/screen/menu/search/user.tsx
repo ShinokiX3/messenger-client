@@ -26,7 +26,7 @@ const UsersSearch: React.FC<IUsersSearch> = ({ value = '' }) => {
 		if (timeout !== null) clearTimeout(timeout);
 		return setTimeout(() => {
 			setSearchLoading({ loading: false });
-		}, 1200);
+		}, 2000);
 	}, [value]);
 
 	useEffect(() => {
