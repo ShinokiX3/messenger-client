@@ -11,6 +11,7 @@ import {
 } from '@fortawesome/free-regular-svg-icons';
 import { faThumbtack, faTrash } from '@fortawesome/free-solid-svg-icons';
 import React from 'react';
+import { IContext } from './types.type';
 
 const items = [
 	{ ico: faWindowRestore, text: 'Open in new tab', handler: () => {} },
@@ -23,15 +24,7 @@ const items = [
 	{ ico: faTrash, text: 'Delete', red: true, handler: () => {} },
 ];
 
-interface IContextChat {
-	chatId?: string;
-	styles?: { [key: string]: string } | null;
-}
-
-const ContextChat: React.FC<IContextChat> = ({
-	chatId = '',
-	styles = null,
-}) => {
+const ContextChat: React.FC<IContext> = ({ chatId = '', styles = null }) => {
 	return (
 		<ContextWrapper styles={styles ? { ...styles } : null}>
 			{items.map((item) => (

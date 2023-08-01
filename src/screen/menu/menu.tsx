@@ -18,6 +18,7 @@ import FriendsSlider from './search/friends';
 import Slider from './slider';
 import { useActions } from '@/hooks/useActions';
 import ContextChat from '@/components/context/chat';
+import ContextSettings from '@/components/context/settings';
 
 // TODO: temporary solution
 
@@ -66,6 +67,7 @@ const Menu = () => {
 	const [search, setSearch] = useState<string>('');
 	const [chats, setChats] = useState<IChat[]>([]);
 	const [shouldShow, setShouldShow] = useState(false);
+	const [shouldSettings, setShouldSettings] = useState(false);
 
 	const [reload, setReload] = useState('');
 	const ref = useRef(null);
@@ -107,6 +109,12 @@ const Menu = () => {
 		})();
 	}, [reload]);
 
+	useEffect(() => {
+		const windowClickHandler = () => setShouldSettings(false);
+		document.addEventListener('click', windowClickHandler);
+		return () => document.removeEventListener('click', windowClickHandler);
+	}, [shouldSettings]);
+
 	const handler = (e: React.MouseEvent<Element, MouseEvent> | MouseEvent) => {
 		const x = e.pageX - 1;
 		setMenuWidth(`${String(x)}px`);
@@ -135,7 +143,11 @@ const Menu = () => {
 							className="p-bttn-smaller-p w-bttn-smaller-w 
 							h-bttn-smaller-h rounded-[50%] cursor-pointer
 							hover:bg-theme-side-bg-shade flex items-center justify-center"
-							onClick={() => (isSearch ? setIsSearch(false) : () => {})}
+							onClick={() =>
+								isSearch
+									? setIsSearch(false)
+									: setShouldSettings(!shouldSettings)
+							}
 						>
 							{isSearch ? (
 								<FontAwesomeIcon
@@ -144,10 +156,17 @@ const Menu = () => {
 									icon={faArrowLeft}
 								/>
 							) : (
-								<FontAwesomeIcon
-									className="text-color-message text-large-font-size search-ico-rotate-b-effect"
-									icon={faBars}
-								/>
+								<div className="relative">
+									<FontAwesomeIcon
+										className="text-color-message text-large-font-size search-ico-rotate-b-effect"
+										icon={faBars}
+									/>
+									{shouldSettings ? (
+										<ContextSettings
+											styles={{ left: '-65%', top: '165%', width: '270px' }}
+										/>
+									) : null}
+								</div>
 							)}
 						</div>
 					</div>
