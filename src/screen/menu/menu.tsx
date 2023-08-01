@@ -156,7 +156,7 @@ const Menu = () => {
 									icon={faArrowLeft}
 								/>
 							) : (
-								<div className="relative">
+								<div className="relative leading-none">
 									<FontAwesomeIcon
 										className="text-color-message text-large-font-size search-ico-rotate-b-effect"
 										icon={faBars}
