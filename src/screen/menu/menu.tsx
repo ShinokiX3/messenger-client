@@ -163,7 +163,7 @@ const Menu = () => {
 									/>
 									{shouldSettings ? (
 										<ContextSettings
-											styles={{ left: '-65%', top: '165%', width: '270px' }}
+											styles={{ left: '-65%', top: '200%', width: '270px' }}
 										/>
 									) : null}
 								</div>

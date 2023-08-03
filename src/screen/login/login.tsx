@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/navigation';
 import { useActions } from '@/hooks/useActions';
+import { setCookie } from 'nookies';
 
 const Login = () => {
 	const [loading, setLoading] = useState(false);
@@ -37,6 +38,7 @@ const Login = () => {
 
 		if (response.user) {
 			login({ token: response.token, user: response.user[0] });
+			setCookie(null, 'token', response.token);
 			push('/a');
 		}
 	};
