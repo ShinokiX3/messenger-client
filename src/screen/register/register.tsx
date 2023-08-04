@@ -11,14 +11,35 @@ import React, { useState } from 'react';
 const Register = () => {
 	const [loading, setLoading] = useState(false);
 	const [name, setName] = useState<string>('');
+	const [redName, setRedName] = useState<boolean>(false);
 	const [email, setEmail] = useState<string>('');
+	const [redEmail, setRedEmail] = useState<boolean>(false);
 	const [password, setPassword] = useState<string>('');
+	const [redPassword, setRedPassword] = useState<boolean>(false);
 	const { push } = useRouter();
 
 	const { login } = useActions();
 	const user = useTypedSelector((state) => state.user.user);
 
+	const handleMask = () => {
+		if (name.length < 1) setRedName(true);
+		if (email.length < 1) setRedEmail(true);
+		if (password.length < 1) setRedPassword(true);
+
+		let allow = redName || redEmail || redPassword;
+
+		[setRedName, setRedEmail, setRedPassword].forEach((func, index) =>
+			setTimeout(() => {
+				func(false);
+			}, (index + 1) * 400)
+		);
+
+		return !allow;
+	};
+
 	const handleRegister = async () => {
+		if (handleMask()) return null;
+
 		setLoading(true);
 
 		const response = await fetch(
@@ -78,6 +99,7 @@ const Register = () => {
 					header="Your uniq name"
 					type="text"
 					value={name}
+					red={redName}
 					handler={setName}
 					placeholder="Name"
 				/>
@@ -85,6 +107,7 @@ const Register = () => {
 					header="Email"
 					type="email"
 					value={email}
+					red={redEmail}
 					handler={setEmail}
 					placeholder="Email"
 				/>
@@ -92,6 +115,7 @@ const Register = () => {
 					header="Password"
 					type="password"
 					value={password}
+					red={redPassword}
 					handler={setPassword}
 					placeholder="Password"
 				/>

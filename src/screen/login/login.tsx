@@ -11,8 +11,10 @@ import { useActions } from '@/hooks/useActions';
 import { setCookie } from 'nookies';
 
 const Login = () => {
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState<boolean>(false);
 	const [password, setPassword] = useState<string>('');
+	const [red, setRed] = useState<boolean>(false);
+
 	const { push } = useRouter();
 
 	const { login } = useActions();
@@ -40,6 +42,12 @@ const Login = () => {
 			login({ token: response.token, user: response.user[0] });
 			setCookie(null, 'token', response.token);
 			push('/a');
+		} else {
+			setLoading(false);
+			setRed(true);
+			setTimeout(() => {
+				setRed(false);
+			}, 1000);
 		}
 	};
 
@@ -74,6 +82,7 @@ const Login = () => {
 					header="Password"
 					type="password"
 					value={password}
+					red={red}
 					handler={setPassword}
 					placeholder="Password"
 				/>

@@ -74,13 +74,15 @@ export const Message: React.FC<IMessage> = ({
 						</div>
 					) : null}
 				</div>
-				<FontAwesomeIcon
-					className="absolute right-0 top-[50%] text-message-control-fs 
-                    translate-x-message-control-pos-r translate-y-[-50%]
-                    text-color-composer-button hover:text-color-primary 
-                    cursor-pointer hover:cursor-default"
-					icon={faPaperclip}
-				/>
+				<div>
+					<FontAwesomeIcon
+						className="absolute right-0 top-[50%] text-message-control-fs 
+						translate-x-message-control-pos-r translate-y-[-50%]
+						text-color-composer-button hover:text-color-primary 
+						cursor-pointer hover:cursor-default"
+						icon={faPaperclip}
+					/>
+				</div>
 				<svg
 					className="absolute right-[-9px] bottom-[-3px]"
 					width="9"

@@ -14,7 +14,7 @@ async function verifyUser() {
 	const nextCookies = cookies();
 	const token = nextCookies.get('token');
 
-	if (!token || !token.value) redirect('/auth');
+	if (!token) redirect('/auth');
 
 	const user = await fetch(
 		'https://messenger-server-six.vercel.app/auth/check',

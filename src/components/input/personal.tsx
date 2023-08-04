@@ -4,10 +4,11 @@ import React, { useState } from 'react';
 
 interface IWrapper {
 	title: string;
+	red?: boolean;
 	children: React.ReactNode;
 }
 
-const Wrapper: React.FC<IWrapper> = ({ title, children }) => {
+const Wrapper: React.FC<IWrapper> = ({ title, red, children }) => {
 	const [active, setActive] = useState<boolean>(false);
 	return (
 		<div
@@ -16,6 +17,7 @@ const Wrapper: React.FC<IWrapper> = ({ title, children }) => {
             hover:border-color-primary hover:text-color-primary
             transition-[all] ease-in-out
 			${active ? 'border-color-primary text-color-primary' : ''}`}
+			style={red ? { borderColor: 'red', color: 'red' } : {}}
 			onClick={() => setActive(true)}
 			onBlur={() => setActive(false)}
 		>
@@ -35,6 +37,7 @@ type TInputType = 'text' | 'password' | 'button' | 'email' | 'tel';
 interface IInput {
 	header: string;
 	type: TInputType;
+	red?: boolean;
 	placeholder?: string;
 	value: string;
 	handler: Function;
@@ -43,12 +46,13 @@ interface IInput {
 const Input: React.FC<IInput> = ({
 	header = '',
 	type = 'text',
+	red = false,
 	placeholder = '',
 	value = '',
 	handler = () => {},
 }) => {
 	return (
-		<Wrapper title={header}>
+		<Wrapper title={header} red={red}>
 			<input
 				type={type}
 				placeholder={placeholder}

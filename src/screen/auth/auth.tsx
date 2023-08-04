@@ -17,6 +17,7 @@ const Auth = () => {
 		title: 'Ukraine',
 		value: '+380',
 	});
+	const [red, setRed] = useState<boolean>(false);
 
 	const { push } = useRouter();
 	const { setUserPhone } = useActions();
@@ -25,6 +26,15 @@ const Auth = () => {
 
 	const handleSubmit = async () => {
 		setLoading(true);
+
+		if (phone.length < 13) {
+			setLoading(false);
+			setRed(true);
+			setTimeout(() => {
+				setRed(false);
+			}, 1000);
+			return null;
+		}
 
 		const response = await fetch(
 			`https://messenger-server-six.vercel.app/auth/check-phone`,
@@ -86,6 +96,7 @@ const Auth = () => {
 						header="Your phone number"
 						type="text"
 						value={phone}
+						red={red}
 						// TODO: create new util function for phone mask
 						handler={(value: string) => {
 							const re = /[^\d+]/gi;
