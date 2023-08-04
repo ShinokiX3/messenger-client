@@ -43,7 +43,7 @@ interface IControlWrapper {
 	handler?: Function;
 }
 
-const ControlWrapper: React.FC<IControlWrapper> = ({
+export const ControlWrapper: React.FC<IControlWrapper> = ({
 	children,
 	styles = {},
 	classes = '',

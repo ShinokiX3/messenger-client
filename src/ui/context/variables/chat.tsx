@@ -9,9 +9,10 @@ interface IChatItem {
 		text: string;
 		red?: boolean;
 	};
+	handler?: Function;
 }
 
-const ChatItem: React.FC<IChatItem> = ({ item }) => {
+const ChatItem: React.FC<IChatItem> = ({ item, handler = () => {} }) => {
 	return (
 		<Wrapper
 			styles={{
@@ -19,6 +20,7 @@ const ChatItem: React.FC<IChatItem> = ({ item }) => {
 				padding: '0.15rem',
 				fontSize: '0.875rem',
 			}}
+			handler={handler}
 		>
 			<FontAwesomeIcon
 				className={`max-w-[1.25rem] text-[1.20rem] ml-[0.5rem] mr-[1.25rem]

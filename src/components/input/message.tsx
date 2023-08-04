@@ -2,27 +2,62 @@ import EmojiPicker from '@emoji-mart/react';
 import data from '@emoji-mart/data';
 import { faFaceSmile } from '@fortawesome/free-regular-svg-icons';
 import {
+	faFolderOpen,
 	faMicrophone,
 	faPaperPlane,
 	faPaperclip,
+	faWindowRestore,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import ContextFile from '../context/file';
+import { createPortal } from 'react-dom';
+import File from '../modal/file';
+
+const body = document.querySelector('body');
 
 interface IMessage {
 	value: string;
 	handlerInput: Function;
 	handlerSend: Function;
+	isSendButton?: boolean;
+	isFileButton?: boolean;
 }
 
 export const Message: React.FC<IMessage> = ({
 	value,
 	handlerInput,
 	handlerSend,
+	isSendButton = true,
+	isFileButton = true,
 }) => {
-	const [isTyping, setIsTyping] = useState<boolean>(false);
 	const [emojiPicker, setEmojiPicker] = useState<boolean>(false);
+	const [filePicker, setFilePicker] = useState<boolean>(false);
+	const [showFileModal, setShowFileModal] = useState<boolean>(false);
+
 	const ref = useRef<HTMLInputElement | null>(null);
+
+	const items = useMemo(
+		() => [
+			{
+				ico: faWindowRestore,
+				text: 'Photo or Video',
+				handler: () => setShowFileModal(true),
+			},
+			{ ico: faFolderOpen, text: 'File', handler: () => {} },
+		],
+		[]
+	);
+
+	useEffect(() => {
+		const handleWindowClick = () => setFilePicker(false);
+		document.addEventListener('click', handleWindowClick);
+		return () => document.removeEventListener('click', handleWindowClick);
+	}, [filePicker]);
+
+	useEffect(() => {
+		console.log(showFileModal);
+	}, [showFileModal]);
 
 	return (
 		<div className="flex items-center justify-center w-full gap-[0.5rem]">
@@ -74,15 +109,30 @@ export const Message: React.FC<IMessage> = ({
 						</div>
 					) : null}
 				</div>
-				<div>
-					<FontAwesomeIcon
-						className="absolute right-0 top-[50%] text-message-control-fs 
-						translate-x-message-control-pos-r translate-y-[-50%]
-						text-color-composer-button hover:text-color-primary 
-						cursor-pointer hover:cursor-default"
-						icon={faPaperclip}
-					/>
-				</div>
+				{isFileButton ? (
+					<div>
+						<FontAwesomeIcon
+							className="absolute right-0 top-[50%] text-message-control-fs 
+							translate-x-message-control-pos-r translate-y-[-50%]
+							text-color-composer-button hover:text-color-primary 
+							cursor-pointer hover:cursor-default"
+							icon={faPaperclip}
+							onClick={() => setFilePicker(true)}
+							onMouseOver={() => setFilePicker(true)}
+						/>
+						{filePicker ? (
+							<ContextFile
+								styles={{
+									width: '250px',
+									right: '0px',
+									left: 'auto',
+									top: '-150%',
+								}}
+								items={items}
+							/>
+						) : null}
+					</div>
+				) : null}
 				<svg
 					className="absolute right-[-9px] bottom-[-3px]"
 					width="9"
@@ -128,26 +178,31 @@ export const Message: React.FC<IMessage> = ({
 					</g>
 				</svg>
 			</div>
-			<div
-				className="rounded-[50%] bg-theme-side-bg-color 
-                w-[3.855rem] h-message-mic-control-wxh flex items-center
-                justify-center text-message-control-fs message-input-form
-                shadow-message-shadow text-color-composer-button
-                hover:bg-color-primary hover:text-white cursor-pointer"
-				onClick={value ? (e) => handlerSend() : (e) => {}}
-			>
-				{value ? (
-					<FontAwesomeIcon
-						className="message-ico-appearance-effect text-color-primary"
-						icon={faPaperPlane}
-					/>
-				) : (
-					<FontAwesomeIcon
-						className="message-ico-appearance-effect-mic"
-						icon={faMicrophone}
-					/>
-				)}
-			</div>
+			{isSendButton ? (
+				<div
+					className="rounded-[50%] bg-theme-side-bg-color 
+					w-[3.855rem] h-message-mic-control-wxh flex items-center
+					justify-center text-message-control-fs message-input-form
+					shadow-message-shadow text-color-composer-button
+					hover:bg-color-primary hover:text-white cursor-pointer"
+					onClick={value ? (e) => handlerSend() : (e) => {}}
+				>
+					{value ? (
+						<FontAwesomeIcon
+							className="message-ico-appearance-effect text-color-primary"
+							icon={faPaperPlane}
+						/>
+					) : (
+						<FontAwesomeIcon
+							className="message-ico-appearance-effect-mic"
+							icon={faMicrophone}
+						/>
+					)}
+				</div>
+			) : null}
+			{showFileModal && body
+				? createPortal(<File showHandler={setShowFileModal} />, body)
+				: null}
 		</div>
 	);
 };

@@ -145,6 +145,7 @@ module.exports = {
 				'middle-light-shadow': 'var(--middle-light-shadow)',
 				'message-shadow': 'var(--message-shadow)',
 				'compact-menu-shadow': 'var(--compact-menu-shadow)',
+				'modal-dialog-shadow': 'var(--modal-dialog-shadow)',
 			},
 			borderRadius: {
 				'default-border-radius': 'var(--default-border-radius)',

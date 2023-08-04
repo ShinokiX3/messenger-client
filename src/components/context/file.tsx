@@ -9,21 +9,28 @@ import {
 	faMessage,
 	faWindowRestore,
 } from '@fortawesome/free-regular-svg-icons';
-import { faThumbtack, faTrash } from '@fortawesome/free-solid-svg-icons';
+import {
+	IconDefinition,
+	faThumbtack,
+	faTrash,
+} from '@fortawesome/free-solid-svg-icons';
 import React from 'react';
 import { IContext } from './types.type';
 
-const items = [
-	{ ico: faWindowRestore, text: 'Photo or Video', handler: () => {} },
-	{ ico: faFolderOpen, text: 'File', handler: () => {} },
-];
+interface TFileContext {
+	items: { ico: IconDefinition; text: string; handler: () => void }[];
+}
 
-const ContextFile: React.FC<IContext> = ({ chatId = '', styles = null }) => {
+const ContextFile: React.FC<IContext & TFileContext> = ({
+	chatId = '',
+	styles = null,
+	items = [],
+}) => {
 	return (
 		<ContextWrapper styles={styles ? { ...styles } : null}>
 			{items.map((item) => (
 				<ContextElement key={item.text}>
-					<ChatItem item={item} />
+					<ChatItem item={item} handler={item.handler} />
 				</ContextElement>
 			))}
 		</ContextWrapper>
