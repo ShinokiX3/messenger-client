@@ -73,7 +73,7 @@ const SendButton: React.FC<ISendButton> = ({
 			<Button
 				type="regular"
 				text="SEND"
-				handler={handlerSend}
+				handler={() => handlerSend()}
 				style={{ minWidth: '80px', height: '100%' }}
 			/>
 		);

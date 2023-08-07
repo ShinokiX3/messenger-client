@@ -129,7 +129,10 @@ const Input: React.FC<IInput> = ({ value, setValue, sendHandler }) => {
 			value={value}
 			placeholder={'Add a caption...'}
 			handlerInput={setValue}
-			handlerSend={sendHandler}
+			handlerSend={() => {
+				console.log('send');
+				sendHandler();
+			}}
 			sendButton={{ show: true, type: 'button-usual' }}
 			isFileButton={false}
 			styles={{ boxShadow: 'none' }}
@@ -148,12 +151,16 @@ const File: React.FC<IFile> = ({ showHandler }) => {
 	const { token } = useTypedSelector((state) => state.user);
 	const { chatId, userId } = useTypedSelector((state) => state.chat);
 
+	// TODO: make loading logic
+
 	const sendMessage = async () => {
 		const formData = new FormData();
 		formData.append('picture', file ? file : '');
 		formData.append('userId', userId);
 		formData.append('chatId', chatId);
 		formData.append('message', value);
+
+		showHandler(false);
 
 		await fetch(
 			`https://messenger-server-production-06a1.up.railway.app/chat/send/photo`,

@@ -93,8 +93,8 @@ const Content: React.FC<IContent> = ({ clear = false, room }) => {
 	// TODO: remove socket from global store
 
 	useEffect(() => {
-		setSocket({ socket: socket, chatId: room ? room : '', userId: user._id });
-	}, [socket]);
+		setSocket({ socket: '', chatId: room ? room : '', userId: user._id });
+	}, []);
 
 	useEffect(() => {
 		(async () => {
@@ -126,8 +126,6 @@ const Content: React.FC<IContent> = ({ clear = false, room }) => {
 
 	useEffect(() => {
 		socket.on('message', (message) => {
-			console.log(message);
-
 			setMessages((prev) => {
 				const messages = [...prev];
 				if (
@@ -161,12 +159,20 @@ const Content: React.FC<IContent> = ({ clear = false, room }) => {
 
 	useEffect(() => {
 		const messageLast = messageLastRef.current;
-		if (messageLast) messageLast.scrollIntoView({ behavior: 'smooth' });
+		if (messageLast)
+			setTimeout(
+				() => messageLast.scrollIntoView({ behavior: 'smooth', block: 'end' }),
+				250
+			);
 	}, [messages]);
 
 	useEffect(() => {
 		if (messageInput !== '') handleTyping();
 	}, [messageInput]);
+
+	useEffect(() => {
+		console.log(socket);
+	}, [socket]);
 
 	const join = (username: string, room: string) => {
 		socket.emit('join', { name: username, room }, (names: string[]) => {
@@ -179,7 +185,9 @@ const Content: React.FC<IContent> = ({ clear = false, room }) => {
 			socket.emit(
 				'createMessege',
 				{ userId: user._id, message: messageInput, room: room },
-				() => setMessageInput('')
+				() => {
+					setMessageInput('');
+				}
 			);
 		}
 	};
