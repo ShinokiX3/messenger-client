@@ -12,6 +12,7 @@ import {
 import storage from 'redux-persist/lib/storage';
 
 import { userSlice } from './user/user.slice';
+import { chatSlice } from './chat/chat.slice';
 
 const persistConfig = {
 	key: 'sinoki-store',
@@ -21,6 +22,7 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
 	user: userSlice.reducer,
+	chat: chatSlice.reducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

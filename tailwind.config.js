@@ -89,6 +89,7 @@ module.exports = {
 				'auth-height': 'var(--auth-height)',
 				'spinner-size': 'var(--spinner-size)',
 				'screen-dvh': 'var(--screen-dvh)',
+				'max-file-upload-h': 'var(--max-file-upload-h)',
 			},
 			scale: {
 				'default-font-weight': 'var(--default-font-weight)',

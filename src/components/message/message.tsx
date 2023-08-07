@@ -10,15 +10,22 @@ type TMessageType =
 	| 'system-message';
 type TSystemImportance = 'date' | 'usual' | 'regular';
 
+// TODO: need to rework message 'text' types and create new .type file for it
+
+export type TCasualMessage = string;
+export type TWithImageMessage = { pictures: string[]; message: string };
+
+export type TCombinedMessageTypes = TCasualMessage | TWithImageMessage;
+
 interface IMessage {
 	type?: TMessageType;
-	text: string;
+	text: TCombinedMessageTypes;
 	time?: Date | null;
 	importance?: TSystemImportance;
 }
 
 interface IStyledMessage {
-	text: string;
+	text: TCombinedMessageTypes;
 	time?: Date | null;
 }
 
@@ -31,7 +38,7 @@ const Onw: React.FC<IStyledMessage> = ({ text, time }) => {
 			justify-self-end"
 		>
 			<div className="flex">
-				<p>{text}</p>
+				<p>{typeof text === 'string' ? text : ''}</p>
 				<div
 					className="flex items-end justify-center 
 					px-[0.25rem] ml-[0.4375rem] mr-[-0.5rem]"
@@ -62,7 +69,7 @@ const Stranger: React.FC<IStyledMessage> = ({ text, time }) => {
 				justify-self-start"
 			>
 				<div className="flex">
-					<p>{text}</p>
+					<p>{typeof text === 'string' ? text : ''}</p>
 					<div
 						className="flex items-end justify-center 
                         px-[0.25rem] ml-[0.4375rem] mr-[-0.5rem]"
@@ -94,8 +101,113 @@ const System: React.FC<IStyledMessage & ISystemMessage> = ({ text, type }) => {
 				font-[500] rounded-default-border-radius bg-pattern-color
 				select-none cursor-pointer"
 			>
-				{text}
+				{typeof text === 'string' ? text : ''}
 			</p>
+		</div>
+	);
+};
+
+interface IOnwImage {
+	text: TWithImageMessage;
+	time: Date;
+}
+
+// rounded-br-none
+
+const OnwImage: React.FC<IOnwImage> = ({ text, time }) => {
+	return (
+		<div
+			className={`mb-s-message-m-b w-fit h-fit
+			bg-color-bg-s-message rounded-s-message-br-tb-lr 
+			text-s-message-fs relative max-w-s-message-max-w
+			justify-self-end
+			${
+				text.message
+					? 'rounded-br-default-border-radius'
+					: 'rounded-br-default-border-radius'
+			}`}
+		>
+			<div
+				className={`block 
+				${text.message ? '' : 'rounded-b-default-border-radius'}`}
+			>
+				<img
+					src={`https://messenger-server-production-06a1.up.railway.app/${text?.pictures?.[0]}`}
+					alt="picture"
+					className={`rounded-t-default-border-radius
+					${text.message ? '' : 'rounded-b-default-border-radius'}`}
+				/>
+				{text.message ? (
+					<p className="p-[0.4rem] max-w-[85%]">{text.message}</p>
+				) : null}
+				<div
+					className="flex items-end justify-center bg-[#00000033] py-[0.3rem] px-[0.5rem]
+					ml-[0.4375rem] mr-[-0.5rem] absolute right-[0.8rem] bottom-[0.4rem] rounded-default-border-radius"
+				>
+					<p className="text-small-ltime-fs mr-[0.1875rem] leading-none">
+						{parseToStringTime(time ? new Date(time) : new Date())}
+					</p>
+					<ReadStatus status={'read'} color="white" />
+					{/* {text.message ? <Appendix color="--color-bg-s-message" /> : null} */}
+				</div>
+			</div>
+		</div>
+	);
+};
+
+interface IStrangerImage {
+	text: TWithImageMessage;
+	time: Date;
+}
+
+// rounded-br-none
+
+const StrangerImage: React.FC<IStrangerImage> = ({ text, time }) => {
+	if (!text) return <div>Loading...</div>;
+
+	return (
+		<div className="grid grid-cols-s-message-grid-t-col">
+			<div
+				className="rounded-[50%] bg-white 
+				w-preview-image-sm-w h-preview-image-sm-h
+				mr-[0.625rem] self-end mb-[0.5rem]"
+			></div>
+			<div
+				className={`mb-s-message-m-b w-fit h-fit
+				bg-color-bg-s-message rounded-s-message-br-tb-lr 
+				text-s-message-fs relative max-w-s-message-max-w
+				justify-self-start
+			${
+				text?.message
+					? 'rounded-br-default-border-radius'
+					: 'rounded-br-default-border-radius'
+			}`}
+			>
+				<div
+					className={`block 
+				${text?.message ? '' : 'rounded-b-default-border-radius'}`}
+				>
+					<img
+						src={`https://messenger-server-production-06a1.up.railway.app/${text?.pictures?.[0]}`}
+						alt="picture"
+						className={`rounded-t-default-border-radius
+					${text?.message ? '' : 'rounded-b-default-border-radius'}`}
+					/>
+					{text?.message ? (
+						<p className="p-[0.4rem] max-w-[85%]">{text?.message}</p>
+					) : null}
+					<div
+						className="flex items-end justify-center bg-[#00000033] py-[0.3rem] px-[0.5rem]
+					ml-[0.4375rem] mr-[-0.5rem] absolute right-[0.8rem] bottom-[0.4rem] rounded-default-border-radius"
+					>
+						<p className="text-small-ltime-fs mr-[0.1875rem] leading-none">
+							{parseToStringTime(time ? new Date(time) : new Date())}
+						</p>
+						<ReadStatus status={'read'} color="white" />
+						{/* {text.message ? <Appendix color="--color-bg-s-message" /> : null} */}
+					</div>
+				</div>
+			</div>
 		</div>
 	);
 };
@@ -106,11 +218,24 @@ const Message: React.FC<IMessage> = ({
 	text,
 	time = null,
 }) => {
-	if (type === 'system') return <System text={text} type={importance} />;
+	// TODO: temporary solution
+	const isImage = typeof text === 'string' ? false : true;
 
-	if (type === 'own') return <Onw text={text} time={time} />;
+	if (type === 'system' && !isImage)
+		return <System text={text} type={importance} />;
+	if (type === 'own' && !isImage) return <Onw text={text} time={time} />;
+	if (type === 'stranger' && !isImage)
+		return <Stranger text={text} time={time} />;
 
-	if (type === 'stranger') return <Stranger text={text} time={time} />;
+	const nested: TWithImageMessage =
+		typeof text !== 'string'
+			? { ...text }
+			: { pictures: ['picture'], message: '' };
+
+	if (type === 'own' && isImage)
+		return <OnwImage text={nested} time={time ? time : new Date()} />;
+	if (type === 'stranger' && isImage)
+		return <StrangerImage text={nested} time={time ? time : new Date()} />;
 
 	return null;
 };

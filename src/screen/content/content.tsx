@@ -24,10 +24,15 @@ export interface IRead {
 	quantity: number;
 }
 
+export type TCasualMessage = string;
+export type TWithImageMessage = { pictures: string[]; message: string };
+
+export type TCombinedMessageTypes = TCasualMessage | TWithImageMessage;
+
 export interface IMessage {
 	userId: string;
 	messageId: string;
-	message: string;
+	message: TCombinedMessageTypes;
 	writed: Date;
 	read: TMessageDeliveryStatus | null;
 }
@@ -83,7 +88,13 @@ const Content: React.FC<IContent> = ({ clear = false, room }) => {
 	const [chatInfo, setChatInfo] = useState<[IChat, IUser[]] | []>([]);
 
 	const { user, token, ui } = useTypedSelector((state) => state.user);
-	const { setShouldHideMenu, setShouldHideContent } = useActions();
+	const { setShouldHideMenu, setShouldHideContent, setSocket } = useActions();
+
+	// TODO: remove socket from global store
+
+	useEffect(() => {
+		setSocket({ socket: socket, chatId: room ? room : '', userId: user._id });
+	}, [socket]);
 
 	useEffect(() => {
 		(async () => {
@@ -115,6 +126,8 @@ const Content: React.FC<IContent> = ({ clear = false, room }) => {
 
 	useEffect(() => {
 		socket.on('message', (message) => {
+			console.log(message);
+
 			setMessages((prev) => {
 				const messages = [...prev];
 				if (
@@ -166,9 +179,7 @@ const Content: React.FC<IContent> = ({ clear = false, room }) => {
 			socket.emit(
 				'createMessege',
 				{ userId: user._id, message: messageInput, room: room },
-				() => {
-					setMessageInput('');
-				}
+				() => setMessageInput('')
 			);
 		}
 	};
@@ -312,7 +323,7 @@ const Content: React.FC<IContent> = ({ clear = false, room }) => {
 									key={message?.messageId}
 									type="stranger"
 									text={message?.message}
-									time={message.writed}
+									time={message?.writed}
 								/>
 							);
 					});

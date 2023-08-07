@@ -13,23 +13,80 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import ContextFile from '../context/file';
 import { createPortal } from 'react-dom';
 import File from '../modal/file';
+import Button from '../button/button';
 
 const body = document.querySelector('body');
 
+type TSendButtonType = 'initial' | 'button-usual';
+
+type TSendButton = {
+	show: boolean;
+	type: TSendButtonType;
+};
+
 interface IMessage {
 	value: string;
+	placeholder?: string;
 	handlerInput: Function;
 	handlerSend: Function;
-	isSendButton?: boolean;
+	sendButton?: TSendButton;
 	isFileButton?: boolean;
+	styles?: {};
 }
+
+interface ISendButton {
+	value: string;
+	handlerSend: Function;
+	type?: TSendButtonType;
+}
+
+const SendButton: React.FC<ISendButton> = ({
+	value,
+	handlerSend,
+	type = 'initial',
+}) => {
+	if (type === 'initial')
+		return (
+			<div
+				className="rounded-[50%] bg-theme-side-bg-color 
+				w-[3.855rem] h-message-mic-control-wxh flex items-center
+				justify-center text-message-control-fs message-input-form
+				shadow-message-shadow text-color-composer-button
+				hover:bg-color-primary hover:text-white cursor-pointer"
+				onClick={value ? (e) => handlerSend() : (e) => {}}
+			>
+				{value ? (
+					<FontAwesomeIcon
+						className="message-ico-appearance-effect text-color-primary"
+						icon={faPaperPlane}
+					/>
+				) : (
+					<FontAwesomeIcon
+						className="message-ico-appearance-effect-mic"
+						icon={faMicrophone}
+					/>
+				)}
+			</div>
+		);
+	if (type === 'button-usual')
+		return (
+			<Button
+				type="regular"
+				text="SEND"
+				handler={handlerSend}
+				style={{ minWidth: '80px', height: '100%' }}
+			/>
+		);
+};
 
 export const Message: React.FC<IMessage> = ({
 	value,
+	placeholder = 'Message',
 	handlerInput,
 	handlerSend,
-	isSendButton = true,
+	sendButton = { show: true, type: 'initial' },
 	isFileButton = true,
+	styles = {},
 }) => {
 	const [emojiPicker, setEmojiPicker] = useState<boolean>(false);
 	const [filePicker, setFilePicker] = useState<boolean>(false);
@@ -61,12 +118,12 @@ export const Message: React.FC<IMessage> = ({
 
 	return (
 		<div className="flex items-center justify-center w-full gap-[0.5rem]">
-			<div className="relative w-full shadow-message-shadow">
+			<div className="relative w-full shadow-message-shadow" style={styles}>
 				<input
 					ref={ref}
 					type="text"
 					value={value}
-					placeholder="Message"
+					placeholder={placeholder}
 					onChange={(e) => handlerInput(e.target.value)}
 					onKeyDown={(e) => {
 						if (e.key === 'Enter') handlerSend();
@@ -178,27 +235,12 @@ export const Message: React.FC<IMessage> = ({
 					</g>
 				</svg>
 			</div>
-			{isSendButton ? (
-				<div
-					className="rounded-[50%] bg-theme-side-bg-color 
-					w-[3.855rem] h-message-mic-control-wxh flex items-center
-					justify-center text-message-control-fs message-input-form
-					shadow-message-shadow text-color-composer-button
-					hover:bg-color-primary hover:text-white cursor-pointer"
-					onClick={value ? (e) => handlerSend() : (e) => {}}
-				>
-					{value ? (
-						<FontAwesomeIcon
-							className="message-ico-appearance-effect text-color-primary"
-							icon={faPaperPlane}
-						/>
-					) : (
-						<FontAwesomeIcon
-							className="message-ico-appearance-effect-mic"
-							icon={faMicrophone}
-						/>
-					)}
-				</div>
+			{sendButton.show ? (
+				<SendButton
+					value={value}
+					handlerSend={handlerSend}
+					type={sendButton.type}
+				/>
 			) : null}
 			{showFileModal && body
 				? createPortal(<File showHandler={setShowFileModal} />, body)

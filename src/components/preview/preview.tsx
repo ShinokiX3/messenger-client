@@ -171,7 +171,7 @@ const Preview: React.FC<IPreviewComponent> = ({
 							// mr-[0.1875rem]
 							className={`text-small-text-size
 							flex justify-center items-center
-						${active ? 'white' : 'text-color-meta'}`}
+							${active ? 'white' : 'text-color-meta'}`}
 						>
 							{data.last.status ? (
 								<div className="flex justify-center items-center mr-[2px]">
@@ -190,7 +190,11 @@ const Preview: React.FC<IPreviewComponent> = ({
 							{data.last.from ? (
 								<p className="text-white font-[500] mr-[0.25rem]">{`${data.last.from}:`}</p>
 							) : null}
-							<p>{data.last.message}</p>
+							<p>
+								{typeof data.last.message === 'string'
+									? data.last.message
+									: 'Image'}
+							</p>
 						</div>
 						<div>
 							{data.pinned && !data.read ? (
