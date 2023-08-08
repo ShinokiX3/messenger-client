@@ -6,6 +6,7 @@ import { useTypedSelector } from '@/hooks/useTypedSelector';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useRouter } from 'next/navigation';
+import { setCookie } from 'nookies';
 import React, { useState } from 'react';
 
 const Register = () => {
@@ -26,7 +27,9 @@ const Register = () => {
 		if (email.length < 1) setRedEmail(true);
 		if (password.length < 1) setRedPassword(true);
 
-		let allow = redName || redEmail || redPassword;
+		let allow = name.length < 1 || email.length < 1 || password.length < 1;
+
+		console.log(allow);
 
 		[setRedName, setRedEmail, setRedPassword].forEach((func, index) =>
 			setTimeout(() => {
@@ -34,7 +37,7 @@ const Register = () => {
 			}, (index + 1) * 400)
 		);
 
-		return !allow;
+		return allow;
 	};
 
 	const handleRegister = async () => {
@@ -62,6 +65,7 @@ const Register = () => {
 
 		if (response.token) {
 			login({ token: response.token, user: response.user[0] });
+			setCookie(null, 'token', response.token);
 			push('/a');
 		}
 	};
