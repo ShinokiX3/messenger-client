@@ -6,13 +6,14 @@ import { useRouter } from 'next/navigation';
 import { useActions } from '@/hooks/useActions';
 import Spinner from '@/ui/spinner';
 import CountryItem, { countries } from '@/ui/context/variables/country';
+import authService from '@/services/auth.service';
 
 // TODO: move to new component / file
 
 const Auth = () => {
-	const [loading, setLoading] = useState(false);
-	const [country, setCountry] = useState('Ukraine');
-	const [phone, setPhone] = useState('');
+	const [loading, setLoading] = useState<boolean>(false);
+	const [country, setCountry] = useState<string>('Ukraine');
+	const [phone, setPhone] = useState<string>('');
 	const [selectedCountry, setSelectedCountry] = useState<TSelectItem>({
 		title: 'Ukraine',
 		value: '+380',
@@ -36,17 +37,7 @@ const Auth = () => {
 			return null;
 		}
 
-		const response = await fetch(
-			`https://messenger-server-six.vercel.app/auth/check-phone`,
-			{
-				method: 'POST',
-				mode: 'cors',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({ phone: phone }),
-			}
-		).then((data) => data.json());
+		const response = await authService.checkPhone({ phone });
 
 		if (response.statusCode === 200) push('/auth/login');
 		else push('/auth/register');

@@ -3,6 +3,7 @@ import Button from '@/components/button/button';
 import { Input } from '@/components/input/personal';
 import { useActions } from '@/hooks/useActions';
 import { useTypedSelector } from '@/hooks/useTypedSelector';
+import authService from '@/services/auth.service';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useRouter } from 'next/navigation';
@@ -45,23 +46,12 @@ const Register = () => {
 
 		setLoading(true);
 
-		const response = await fetch(
-			`https://messenger-server-six.vercel.app/auth/register`,
-			{
-				method: 'POST',
-				mode: 'cors',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({
-					email: email,
-					password: password,
-					name: name,
-					phone: user.phone,
-					birthdate: new Date(),
-				}),
-			}
-		).then((data) => data.json());
+		const response = await authService.register({
+			email,
+			password,
+			name,
+			phone: user.phone,
+		});
 
 		if (response.token) {
 			login({ token: response.token, user: response.user[0] });

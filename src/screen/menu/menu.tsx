@@ -19,6 +19,8 @@ import Slider from './slider';
 import { useActions } from '@/hooks/useActions';
 import ContextChat from '@/components/context/chat';
 import ContextSettings from '@/components/context/settings';
+import esourcingService from '@/services/esourcing.service';
+import chatService from '@/services/chat.service';
 
 // TODO: temporary solution
 
@@ -50,61 +52,34 @@ export interface IChat {
 	participants: IParticipant[];
 }
 
-const MenuUsers: React.FC<IMenuUsers> = ({ type = 'contacts', value = '' }) => {
-	useEffect(() => {
-		console.log('rerender by value');
-	}, []);
-	return (
-		<>
-			{type === 'contacts' ? <FriendsSlider /> : <UsersSearch value={value} />}
-		</>
-	);
-};
+const MenuUsers: React.FC<IMenuUsers> = ({ type = 'contacts', value = '' }) =>
+	type === 'contacts' ? <FriendsSlider /> : <UsersSearch value={value} />;
 
 const Menu = () => {
 	const [isSearch, setIsSearch] = useState<boolean>(false);
 	const [animate, setAnimate] = useState<boolean>(false);
 	const [search, setSearch] = useState<string>('');
 	const [chats, setChats] = useState<IChat[]>([]);
-	const [shouldShow, setShouldShow] = useState(false);
-	const [shouldSettings, setShouldSettings] = useState(false);
+	const [shouldSettings, setShouldSettings] = useState<boolean>(false);
 
 	const [reload, setReload] = useState('');
 	const ref = useRef(null);
 
 	const user = useTypedSelector((state) => state.user);
 	const { shouldHideMenu } = useTypedSelector((state) => state.user.ui);
-	const { setMenuWidth, setShouldHideMenu, setShouldHideContent } =
-		useActions();
+	const { setMenuWidth, setShouldHideContent } = useActions();
 
 	const menuW = useMemo(() => `${user.ui?.menuW}`, [user.ui.menuW]);
 
 	useEffect(() => {
 		// TODO: mobile test
 		setShouldHideContent(true);
-		(async () => {
-			const eventSource = new EventSource(
-				`https://messenger-server-production-06a1.up.railway.app/chat/connection`
-			);
-			eventSource.onmessage = (event: any) => {
-				const message = JSON.parse(event.data);
-				setReload(message);
-			};
-		})();
+		esourcingService.chatConnection(setReload);
 	}, []);
 
 	useEffect(() => {
 		(async () => {
-			const chats = await fetch(
-				`https://messenger-server-six.vercel.app/chat/all`,
-				{
-					method: 'GET',
-					headers: {
-						'Content-Type': 'application/json',
-						Authorization: `Bearer ${user.token}`,
-					},
-				}
-			).then((data) => data.json());
+			const chats = await chatService.getAll({ token: user.token });
 			if (chats) setChats(chats);
 		})();
 	}, [reload]);

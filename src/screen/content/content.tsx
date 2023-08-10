@@ -15,6 +15,8 @@ import { parseToStringTime } from '@/utils/parseToStringTime';
 import { IChat } from '../menu/menu';
 import { IUser } from '@/store/user/user.types';
 import { useActions } from '@/hooks/useActions';
+import socketService from '@/services/socket.service';
+import chatService from '@/services/chat.service';
 
 export type TMessageUnreadImportance = 'regular' | 'important';
 export type TMessageDeliveryStatus = 'sended' | 'read';
@@ -75,10 +77,8 @@ interface IContent {
 let timeout: ReturnType<typeof setTimeout> | null = null;
 
 const Content: React.FC<IContent> = ({ clear = false, room }) => {
-	const socket = useMemo(
-		() => io('https://messenger-server-production-06a1.up.railway.app'),
-		[]
-	);
+	const socket = useMemo(() => socketService.connect(), []);
+
 	const [messageInput, setMessageInput] = useState('');
 	// const [messages, setMessages] = useState<IMessages>([]);
 	const [messages, setMessages] = useState<IMessages[]>([]);
@@ -98,18 +98,11 @@ const Content: React.FC<IContent> = ({ clear = false, room }) => {
 
 	useEffect(() => {
 		(async () => {
-			const response: [IChat, IUser[]] = await fetch(
-				`https://messenger-server-six.vercel.app/chat/search/id`,
-				{
-					method: 'POST',
-					mode: 'cors',
-					headers: {
-						'Content-type': 'application/json',
-						Authorization: `Bearer ${token}`,
-					},
-					body: JSON.stringify({ chatId: room }),
-				}
-			).then((data) => data.json());
+			const response = await chatService.searchById({
+				token,
+				room: room ? room : '',
+			});
+
 			setChatInfo([response[0], response[1].map((item: any) => item[0])]);
 		})();
 	}, []);
@@ -344,3 +337,8 @@ const Content: React.FC<IContent> = ({ clear = false, room }) => {
 };
 
 export default memo(Content);
+
+// const socket = useMemo(
+// 	() => io('https://messenger-server-production-06a1.up.railway.app'),
+// 	[]
+// );

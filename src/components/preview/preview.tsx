@@ -12,6 +12,7 @@ import { useRouter } from 'next/navigation';
 import { ripple } from '@/utils/ripple';
 import { useTypedSelector } from '@/hooks/useTypedSelector';
 import { useActions } from '@/hooks/useActions';
+import chatService from '@/services/chat.service';
 
 export type TType = 'chat' | 'group' | 'channel';
 export type TMessageDeliveryStatus = 'sended' | 'read' | null;
@@ -115,18 +116,7 @@ const Preview: React.FC<IPreviewComponent> = ({
 			return null;
 		}
 
-		const response = await fetch(
-			`https://messenger-server-six.vercel.app/chat/search`,
-			{
-				method: 'POST',
-				mode: 'cors',
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: `Bearer ${token}`,
-				},
-				body: JSON.stringify({ revieving: revieving }),
-			}
-		).then((data) => data.json());
+		const response = await chatService.searchByRevieving({ token, revieving });
 
 		if (response.length > 0) {
 			router.push('/a/' + response[0].chatId);

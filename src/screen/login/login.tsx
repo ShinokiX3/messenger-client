@@ -9,6 +9,7 @@ import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/navigation';
 import { useActions } from '@/hooks/useActions';
 import { setCookie } from 'nookies';
+import authService from '@/services/auth.service';
 
 const Login = () => {
 	const [loading, setLoading] = useState<boolean>(false);
@@ -23,20 +24,7 @@ const Login = () => {
 	const handleAuth = async () => {
 		setLoading(true);
 
-		const response = await fetch(
-			`https://messenger-server-six.vercel.app/auth/login`,
-			{
-				method: 'POST',
-				mode: 'cors',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({
-					phone: user.phone,
-					password: password,
-				}),
-			}
-		).then((res) => res.json());
+		const response = await authService.login({ phone: user.phone, password });
 
 		if (response.user) {
 			login({ token: response.token, user: response.user[0] });
