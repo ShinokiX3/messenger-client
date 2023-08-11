@@ -61,6 +61,7 @@ const Menu = () => {
 	const [search, setSearch] = useState<string>('');
 	const [chats, setChats] = useState<IChat[]>([]);
 	const [shouldSettings, setShouldSettings] = useState<boolean>(false);
+	const [loading, setLoading] = useState<boolean>(false);
 
 	const [reload, setReload] = useState('');
 	const ref = useRef(null);
@@ -79,8 +80,10 @@ const Menu = () => {
 
 	useEffect(() => {
 		(async () => {
+			setLoading(true);
 			const chats = await chatService.getAll({ token: user.token });
 			if (chats) setChats(chats);
+			setLoading(false);
 		})();
 	}, [reload]);
 
@@ -158,7 +161,7 @@ const Menu = () => {
 			{isSearch ? (
 				<MenuUsers type={search ? 'search' : 'contacts'} value={search} />
 			) : (
-				<MenuChats animate={animate} chats={chats} />
+				<MenuChats animate={animate} chats={chats} loading={loading} />
 			)}
 		</div>
 	);

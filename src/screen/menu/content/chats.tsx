@@ -3,6 +3,7 @@ import MenuWrapper from '../wrapper';
 import Preview, { IPreview } from '@/components/preview/preview';
 import { IChat } from '../menu';
 import ContextChat from '@/components/context/chat';
+import ChatsLoader from '@/ui/loader/loader';
 
 // TODO: to utils
 
@@ -15,9 +16,14 @@ type TChatData = {
 interface IMenuChats {
 	animate: boolean;
 	chats: GetObjDifferentKeys<IChat, TChatData>[];
+	loading: boolean;
 }
 
-const MenuChats: React.FC<IMenuChats> = ({ animate = false, chats = [] }) => {
+const MenuChats: React.FC<IMenuChats> = ({
+	animate = false,
+	chats = [],
+	loading = false,
+}) => {
 	const [active, setActive] = useState('');
 	const [shouldShow, setShouldShow] = useState(false);
 	const [styles, setStyles] = useState<{ [key: string]: string } | {}>({});
@@ -81,6 +87,17 @@ const MenuChats: React.FC<IMenuChats> = ({ animate = false, chats = [] }) => {
 		// if (x + blockW < oW && x - blockW < 0) return `${x + 220}px`;
 		else return `${x}px`;
 	};
+
+	if (loading)
+		return (
+			<MenuWrapper>
+				{[...new Array(8)].map((_, index) => (
+					<div className="p-preview-padding" key={index}>
+						<ChatsLoader />
+					</div>
+				))}
+			</MenuWrapper>
+		);
 
 	return (
 		<MenuWrapper items={chats?.length}>
