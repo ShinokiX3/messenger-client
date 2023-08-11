@@ -91,7 +91,7 @@ const MenuChats: React.FC<IMenuChats> = ({
 	if (loading)
 		return (
 			<MenuWrapper>
-				{[...new Array(8)].map((_, index) => (
+				{[...new Array(9)].map((_, index) => (
 					<div className="p-preview-padding" key={index}>
 						<ChatsLoader />
 					</div>
