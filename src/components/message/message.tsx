@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { ReadStatus, parseToStringTime } from '../preview/preview';
 import Appendix from './appendix';
+import Image from 'next/image';
+import { staticBlurDataUrl } from '@/utils/staticBlurDataUrl';
+import { dynamicBlurDataUrl } from '@/utils/dynamicBlurDataUrl';
 
 type TMessageType =
 	| 'own'
@@ -115,6 +118,19 @@ interface IOnwImage {
 // rounded-br-none
 
 const OnwImage: React.FC<IOnwImage> = ({ text, time }) => {
+	const [image, setImage] = useState<{ url: string; placeholder: string }>({
+		url: '',
+		placeholder: '',
+	});
+
+	useEffect(() => {
+		(async () => {
+			const url = `https://messenger-server-production-06a1.up.railway.app/${text?.pictures?.[0]}`;
+			const placeholder = await dynamicBlurDataUrl(url);
+			if (placeholder) setImage({ url, placeholder });
+		})();
+	}, [text]);
+
 	return (
 		<div
 			className={`mb-s-message-m-b w-fit h-fit
@@ -131,9 +147,20 @@ const OnwImage: React.FC<IOnwImage> = ({ text, time }) => {
 				className={`block 
 				${text.message ? '' : 'rounded-b-default-border-radius'}`}
 			>
-				<img
-					src={`https://messenger-server-production-06a1.up.railway.app/${text?.pictures?.[0]}`}
-					alt="picture"
+				{/* TODO: Implement <Image /> from NextJS with its width \ height settings */}
+				{/* TODO: Create new component for pre-loading images */}
+				<Image
+					src={image.url}
+					alt="User picture"
+					width={200}
+					height={200}
+					sizes="100vw"
+					placeholder="blur"
+					blurDataURL={image.placeholder || staticBlurDataUrl()}
+					style={{
+						width: '100%',
+						height: 'auto',
+					}}
 					className={`rounded-t-default-border-radius
 					${text.message ? '' : 'rounded-b-default-border-radius'}`}
 				/>
@@ -163,6 +190,21 @@ interface IStrangerImage {
 // rounded-br-none
 
 const StrangerImage: React.FC<IStrangerImage> = ({ text, time }) => {
+	const [image, setImage] = useState<{ url: string; placeholder: string }>({
+		url: '',
+		placeholder: '',
+	});
+
+	useEffect(() => {
+		(async () => {
+			const url = `https://messenger-server-production-06a1.up.railway.app/${
+				text?.pictures?.[0] || 'image/'
+			}`;
+			const placeholder = await dynamicBlurDataUrl(url);
+			if (placeholder) setImage({ url, placeholder });
+		})();
+	}, [text]);
+
 	if (!text) return <div>Loading...</div>;
 
 	return (
@@ -187,11 +229,20 @@ const StrangerImage: React.FC<IStrangerImage> = ({ text, time }) => {
 					className={`block 
 				${text?.message ? '' : 'rounded-b-default-border-radius'}`}
 				>
-					<img
-						src={`https://messenger-server-production-06a1.up.railway.app/${text?.pictures?.[0]}`}
-						alt="picture"
+					<Image
+						src={image.url}
+						alt="User picture"
+						width={200}
+						height={200}
+						sizes="100vw"
+						placeholder="blur"
+						blurDataURL={image.placeholder || staticBlurDataUrl()}
+						style={{
+							width: '100%',
+							height: 'auto',
+						}}
 						className={`rounded-t-default-border-radius
-					${text?.message ? '' : 'rounded-b-default-border-radius'}`}
+						${text.message ? '' : 'rounded-b-default-border-radius'}`}
 					/>
 					{text?.message ? (
 						<p className="p-[0.4rem] max-w-[85%]">{text?.message}</p>

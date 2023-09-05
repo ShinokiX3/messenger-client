@@ -7,9 +7,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Message as MessageInput } from '@/components/input/message';
-// import Message from '@/components/message/Message';
 import Message from '@/components/message/message';
-import { io } from 'socket.io-client';
 import { useTypedSelector } from '@/hooks/useTypedSelector';
 import { parseToStringTime } from '@/utils/parseToStringTime';
 import { IChat } from '../menu/menu';
@@ -80,7 +78,6 @@ const Content: React.FC<IContent> = ({ clear = false, room }) => {
 	const socket = useMemo(() => socketService.connect(), []);
 
 	const [messageInput, setMessageInput] = useState('');
-	// const [messages, setMessages] = useState<IMessages>([]);
 	const [messages, setMessages] = useState<IMessages[]>([]);
 	const [typingDisplay, setTypingDisplay] = useState('');
 	const [joined, setJoined] = useState(false);
@@ -148,8 +145,6 @@ const Content: React.FC<IContent> = ({ clear = false, room }) => {
 		};
 	}, [user]);
 
-	// JSX.IntrinsicElements.div: React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
-
 	useEffect(() => {
 		const messageLast = messageLastRef.current;
 		if (messageLast)
@@ -162,10 +157,6 @@ const Content: React.FC<IContent> = ({ clear = false, room }) => {
 	useEffect(() => {
 		if (messageInput !== '') handleTyping();
 	}, [messageInput]);
-
-	useEffect(() => {
-		console.log(socket);
-	}, [socket]);
 
 	const join = (username: string, room: string) => {
 		socket.emit('join', { name: username, room }, (names: string[]) => {
@@ -337,8 +328,3 @@ const Content: React.FC<IContent> = ({ clear = false, room }) => {
 };
 
 export default memo(Content);
-
-// const socket = useMemo(
-// 	() => io('https://messenger-server-production-06a1.up.railway.app'),
-// 	[]
-// );

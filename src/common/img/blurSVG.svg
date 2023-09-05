@@ -1,0 +1,7 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 5'>
+    <filter id='b' color-interpolation-filters='sRGB'>
+        <feGaussianBlur stdDeviation='1'/>
+    </filter>
+
+    <rect preserveAspectRatio='none' filter='url(#b)' x='0' y='0' height='100%' width='100%' stroke-width='3' stroke='#7b9fa6' fill='#426874' />
+</svg>

@@ -28,10 +28,12 @@ const MenuChats: React.FC<IMenuChats> = ({
 	const [shouldShow, setShouldShow] = useState(false);
 	const [styles, setStyles] = useState<{ [key: string]: string } | {}>({});
 
+	const flag = useRef<boolean>(false);
 	const ref = useRef<HTMLDivElement | null>(null);
 
 	const memochats = useMemo(() => {
 		if (chats.length < 1) return [];
+		flag.current = true;
 		return chats
 			.sort((a, b) => {
 				const da = new Date(a.last.writed);
@@ -88,7 +90,7 @@ const MenuChats: React.FC<IMenuChats> = ({
 		else return `${x}px`;
 	};
 
-	if (loading)
+	if (loading && !flag.current)
 		return (
 			<MenuWrapper>
 				{[...new Array(9)].map((_, index) => (
