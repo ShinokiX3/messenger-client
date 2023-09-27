@@ -5,7 +5,7 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 ## Preview
 
 ![auth](https://github.com/ShinokiX3/messenger-client/assets/68112402/e03e447c-5baa-4fae-b5c5-23a9b60f1e52)
-![register](https://github.com/ShinokiX3/messenger-client/assets/68112402/391bec81-2b5f-4899-a1a9-44edc963985b)
+![register](https://github.com/ShinokiX3/messenger-client/assets/68112402/d48e0b9c-e56b-449d-9288-cee3b43d6abb)
 ![messaging](https://github.com/ShinokiX3/messenger-client/assets/68112402/32541be7-7b50-4bcc-a7c0-a4d6bd99275c)
 ![photos](https://github.com/ShinokiX3/messenger-client/assets/68112402/11895e14-bf3f-44c1-a864-7a2c2a650e05)
 ![search](https://github.com/ShinokiX3/messenger-client/assets/68112402/63a43f05-8fbe-4425-a16f-3bdd67dcbba4)
