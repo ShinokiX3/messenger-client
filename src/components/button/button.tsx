@@ -25,7 +25,7 @@ const sizes = {
 	large: 'p-[0.625rem] h-[3.5rem]',
 };
 
-const Button: React.FC<IButton> = ({
+export const Button: React.FC<IButton> = ({
 	type = 'text',
 	size = 'regular',
 	bgColor = '',
@@ -53,4 +53,23 @@ const Button: React.FC<IButton> = ({
 	);
 };
 
-export default Button;
+interface IconButton extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+	children: React.ReactNode;
+}
+/**
+ * Button with children for rounded pressable icon
+ * @returns 
+ */
+export const IconButton: React.FC<IconButton> = ({ children, ...props }) => {
+	return (
+		<button
+			// p-bttn-smaller-p
+			className="p-[20px] w-bttn-smaller-w 
+			h-bttn-smaller-h rounded-[50%] cursor-pointer
+			hover:bg-theme-side-bg-shade flex items-center justify-center"
+			{...props}
+		>
+			{ children }
+		</button>
+	)
+}

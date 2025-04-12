@@ -19,6 +19,7 @@ const initialUI: IUISettings = {
 	contentW: null,
 	shouldHideMenu: false,
 	shouldHideContent: false,
+	shouldShowSettings: false,
 };
 
 const initialState: IUserInitialState = {
@@ -82,6 +83,10 @@ export const userSlice = createSlice({
 		setShouldHideContent: (state, action: PayloadAction<boolean>) => {
 			state.ui.shouldHideContent = action.payload;
 			state.ui.shouldHideMenu = !action.payload;
+		},
+		
+		setShouldShowSettings: (state, action: PayloadAction<boolean>) => {
+			state.ui.shouldShowSettings = action.payload;
 		},
 
 		reset: (state) => {

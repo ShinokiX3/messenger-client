@@ -3,7 +3,7 @@ import React from 'react';
 interface IWrapper {
 	children: React.ReactNode;
 	styles?: { [key: string]: string } | null;
-	handler?: Function;
+	handler?: () => void;
 }
 
 const Wrapper: React.FC<IWrapper> = ({
@@ -16,7 +16,7 @@ const Wrapper: React.FC<IWrapper> = ({
 			className="flex justify-between items-center px-[0.25rem] 
             text-[0.875rem] font-medium"
 			style={styles ? { ...styles } : {}}
-			onClick={() => handler()}
+			onClick={handler}
 		>
 			{children}
 		</div>

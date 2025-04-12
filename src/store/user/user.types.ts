@@ -15,6 +15,7 @@ export interface IUISettings {
 	contentW: string | null;
 	shouldHideContent: boolean;
 	shouldHideMenu: boolean;
+	shouldShowSettings: boolean;
 }
 
 export interface IUserInitialState {

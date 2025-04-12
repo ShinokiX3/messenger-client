@@ -1,7 +1,7 @@
 import ContextElement from '@/ui/context/element';
 import ChatItem from '@/ui/context/variables/chat';
 import ContextWrapper from '@/ui/context/wrapper';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { IContext } from './types.type';
 import {
 	faBookmark,
@@ -16,25 +16,33 @@ import {
 	faMeteor,
 	faMoon,
 } from '@fortawesome/free-solid-svg-icons';
-
-const items = [
-	{ ico: faBookmark, text: 'Saved Messages', handler: () => {} },
-	{ ico: faUser, text: 'Contacts', handler: () => {} },
-	{ ico: faGear, text: 'Settings', handler: () => {} },
-	{ ico: faMoon, text: 'Night mode', handler: () => {} },
-	{ ico: faMeteor, text: 'Animations', handler: () => {} },
-	{ ico: faCircleQuestion, text: 'Telegran Features', handler: () => {} },
-	{ ico: faBug, text: 'Report Bug', handler: () => {} },
-	{ ico: faK, text: 'Switch to K Version', handler: () => {} },
-	{ ico: faDownload, text: 'Install App', handler: () => {} },
-];
+import _ from 'lodash';
+import { useTypedSelector } from '@/hooks/useTypedSelector';
+import { useActions } from '@/hooks/useActions';
 
 const ContextSettings: React.FC<IContext> = ({ styles }) => {
+	const user = useTypedSelector((state) => state.user);
+	const { 
+		setShouldShowSettings 
+	} = useActions();
+
+	const items = useMemo(() => ([
+		{ ico: faBookmark, text: 'Saved Messages', handler: () => {} },
+		{ ico: faUser, text: 'Contacts', handler: () => {} },
+		{ ico: faGear, text: 'Settings', handler: () => setShouldShowSettings(true) },
+		{ ico: faMoon, text: 'Night mode', handler: () => {} },
+		{ ico: faMeteor, text: 'Animations', handler: () => {} },
+		{ ico: faCircleQuestion, text: 'Telegran Features', handler: () => {} },
+		{ ico: faBug, text: 'Report Bug', handler: () => {} },
+		{ ico: faK, text: 'Switch to K Version', handler: () => {} },
+		{ ico: faDownload, text: 'Install App', handler: () => {} },
+	]), []);
+
 	return (
 		<ContextWrapper styles={styles ? { ...styles } : null}>
 			{items.map((item) => (
 				<ContextElement key={item.text}>
-					<ChatItem item={item} />
+					<ChatItem handler={item.handler} item={item} />
 				</ContextElement>
 			))}
 			<div

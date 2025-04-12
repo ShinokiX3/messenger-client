@@ -9,7 +9,7 @@ interface IChatItem {
 		text: string;
 		red?: boolean;
 	};
-	handler?: Function;
+	handler?: () => void;
 }
 
 const ChatItem: React.FC<IChatItem> = ({ item, handler = () => {} }) => {
