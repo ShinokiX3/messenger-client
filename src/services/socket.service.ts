@@ -1,11 +1,8 @@
 import { io } from 'socket.io-client';
+import { SOURCE } from './sources.const';
 
 class Socket {
-	SOURCE = `https://messenger-server-production-06a1.up.railway.app`;
-
-	connect() {
-		return io(this.SOURCE);
-	}
+	connect() { return io(SOURCE) }
 }
 
 export default new Socket();

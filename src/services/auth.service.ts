@@ -1,4 +1,5 @@
 import { IUser } from '@/store/user/user.types';
+import { SOURCE } from './sources.const';
 
 type TError = unknown;
 
@@ -31,12 +32,10 @@ interface IRegister {
 type TRegisterPromise = IUserFromServer;
 
 class AuthService {
-	SOURSE = 'https://messenger-server-six.vercel.app';
-
 	async checkPhone({ phone }: ICheckPhone): Promise<TCheckPhonePromise> {
 		try {
 			const response: TCheckPhonePromise = await fetch(
-				`${this.SOURSE}/auth/check-phone`,
+				`${SOURCE}/auth/check-phone`,
 				{
 					method: 'POST',
 					mode: 'cors',
@@ -55,7 +54,7 @@ class AuthService {
 
 	async login({ phone, password }: ILogin): Promise<TLoginPromise> {
 		try {
-			const response: TLoginPromise = await fetch(`${this.SOURSE}/auth/login`, {
+			const response: TLoginPromise = await fetch(`${SOURCE}/auth/login`, {
 				method: 'POST',
 				mode: 'cors',
 				headers: {
@@ -82,7 +81,7 @@ class AuthService {
 	}: IRegister): Promise<TRegisterPromise> {
 		try {
 			const response: TRegisterPromise = await fetch(
-				`${this.SOURSE}/auth/register`,
+				`${SOURCE}/auth/register`,
 				{
 					method: 'POST',
 					mode: 'cors',

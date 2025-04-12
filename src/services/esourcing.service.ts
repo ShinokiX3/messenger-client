@@ -1,8 +1,8 @@
-class EventSourcing {
-	SOURCE = `https://messenger-server-production-06a1.up.railway.app`;
+import { SOURCE } from "./sources.const";
 
+class EventSourcing {
 	chatConnection(handler: React.Dispatch<React.SetStateAction<string>>) {
-		const eventSource = new EventSource(`${this.SOURCE}/chat/connection`);
+		const eventSource = new EventSource(`${SOURCE}/chat/connection`);
 
 		eventSource.onmessage = (event: any) => {
 			const message = JSON.parse(event.data);

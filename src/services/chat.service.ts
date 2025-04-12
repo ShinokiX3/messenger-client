@@ -1,5 +1,6 @@
 import { IChat } from '@/screen/menu/menu';
 import { IUser } from '@/store/user/user.types';
+import { SOURCE } from './sources.const';
 
 type TToken = string;
 
@@ -20,12 +21,10 @@ interface IGetAllChats {
 }
 
 class ChatService {
-	SOURCE = `https://messenger-server-six.vercel.app`;
-
 	async searchById({ token, room }: ISearchById): Promise<TSearchByIdPromise> {
 		try {
 			const response: [IChat, IUser[]] = await fetch(
-				`${this.SOURCE}/chat/search/id`,
+				`${SOURCE}/chat/search/id`,
 				{
 					method: 'POST',
 					mode: 'cors',
@@ -45,7 +44,7 @@ class ChatService {
 
 	async searchByRevieving({ token, revieving }: ISearchByRevieving) {
 		try {
-			const response = await fetch(`${this.SOURCE}/chat/search`, {
+			const response = await fetch(`${SOURCE}/chat/search`, {
 				method: 'POST',
 				mode: 'cors',
 				headers: {
@@ -63,7 +62,7 @@ class ChatService {
 
 	async getAll({ token }: IGetAllChats) {
 		try {
-			const response = await fetch(`${this.SOURCE}/chat/all`, {
+			const response = await fetch(`${SOURCE}/chat/all`, {
 				method: 'GET',
 				headers: {
 					'Content-Type': 'application/json',
