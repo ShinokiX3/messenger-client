@@ -4,6 +4,8 @@ import Appendix from './appendix';
 import Image from 'next/image';
 import { staticBlurDataUrl } from '@/utils/staticBlurDataUrl';
 import { dynamicBlurDataUrl } from '@/utils/dynamicBlurDataUrl';
+import { SOURCE } from '@/services/sources.const';
+import fallback from '@/common/img/empty.jpg';
 
 type TMessageType =
 	| 'own'
@@ -119,16 +121,28 @@ interface IOnwImage {
 
 const OnwImage: React.FC<IOnwImage> = ({ text, time }) => {
 	const [image, setImage] = useState<{ url: string; placeholder: string }>({
-		url: '',
+		url: staticBlurDataUrl(),
 		placeholder: '',
 	});
+	const [isError, setIsError] = useState(false);
 
 	useEffect(() => {
 		(async () => {
-			const url = `https://messenger-server-production-06a1.up.railway.app/${text?.pictures?.[0]}`;
-			const placeholder = await dynamicBlurDataUrl(url);
-			if (placeholder) setImage({ url, placeholder });
+			try {
+				const picture = text?.pictures?.[0];
+				const url = `${SOURCE}/${picture}`;
+				const placeholder = await dynamicBlurDataUrl(picture ? url : '');
+				
+				if (placeholder && picture !== undefined) {
+					setImage({ url, placeholder });
+					setIsError(false);
+				}
+			} catch (error) {
+				console.error('Failed to load image:', error);
+				setIsError(true);
+			}
 		})();
+		
 	}, [text]);
 
 	return (
@@ -150,13 +164,14 @@ const OnwImage: React.FC<IOnwImage> = ({ text, time }) => {
 				{/* TODO: Implement <Image /> from NextJS with its width \ height settings */}
 				{/* TODO: Create new component for pre-loading images */}
 				<Image
-					src={image.url}
+					src={isError ? fallback : image.url}
 					alt="User picture"
 					width={200}
 					height={200}
 					sizes="100vw"
 					placeholder="blur"
 					blurDataURL={image.placeholder || staticBlurDataUrl()}
+					onError={() => setIsError(true)}
 					style={{
 						width: '100%',
 						height: 'auto',
@@ -191,18 +206,28 @@ interface IStrangerImage {
 
 const StrangerImage: React.FC<IStrangerImage> = ({ text, time }) => {
 	const [image, setImage] = useState<{ url: string; placeholder: string }>({
-		url: '',
+		url: staticBlurDataUrl(),
 		placeholder: '',
 	});
+	const [isError, setIsError] = useState(false);
 
 	useEffect(() => {
 		(async () => {
-			const url = `https://messenger-server-production-06a1.up.railway.app/${
-				text?.pictures?.[0] || 'image/'
-			}`;
-			const placeholder = await dynamicBlurDataUrl(url);
-			if (placeholder) setImage({ url, placeholder });
+			try {
+				const picture = text?.pictures?.[0];
+				const url = `${SOURCE}/${picture}`;
+				const placeholder = await dynamicBlurDataUrl(picture ? url : '');
+
+				if (placeholder && picture !== undefined) {
+					setImage({ url, placeholder });
+					setIsError(false);
+				}
+			} catch (error) {
+				console.error('Failed to load image:', error);
+				setIsError(true);
+			}
 		})();
+		
 	}, [text]);
 
 	if (!text) return <div>Loading...</div>;
@@ -230,13 +255,14 @@ const StrangerImage: React.FC<IStrangerImage> = ({ text, time }) => {
 				${text?.message ? '' : 'rounded-b-default-border-radius'}`}
 				>
 					<Image
-						src={image.url}
+						src={isError ? fallback : image.url}
 						alt="User picture"
 						width={200}
 						height={200}
 						sizes="100vw"
 						placeholder="blur"
 						blurDataURL={image.placeholder || staticBlurDataUrl()}
+						onError={() => setIsError(true)}
 						style={{
 							width: '100%',
 							height: 'auto',

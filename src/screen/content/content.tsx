@@ -15,6 +15,8 @@ import { IUser } from '@/store/user/user.types';
 import { useActions } from '@/hooks/useActions';
 import socketService from '@/services/socket.service';
 import chatService from '@/services/chat.service';
+import Image from 'next/image';
+import { emptyChatURL } from '@/utils/emptyChat';
 
 export type TMessageUnreadImportance = 'regular' | 'important';
 export type TMessageDeliveryStatus = 'sended' | 'read';
@@ -279,6 +281,16 @@ const Content: React.FC<IContent> = ({ clear = false, room }) => {
 				transform translate-x-message-translate-percent
 				max-h-middle-content-height overflow-auto scrollbar grid"
 			>
+				{messages.length < 2 && (
+					<div className='flex align-middle justify-center'>
+						<Image
+							src={emptyChatURL()}
+							alt="Empty Chat Space"
+							width={200}
+							height={200}
+						/>
+					</div>)
+				}
 				{messages.map((date: IMessages) => {
 					const day = Object.keys(date);
 					if (date[day[0]]?.[0]?.message !== day[0])
