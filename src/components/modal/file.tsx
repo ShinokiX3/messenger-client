@@ -13,6 +13,7 @@ import {
 import { ControlWrapper } from '@/screen/content/content';
 import { faImages } from '@fortawesome/free-regular-svg-icons';
 import { useTypedSelector } from '@/hooks/useTypedSelector';
+import fileService from '@/services/file.service';
 
 interface IHeader {
 	showHandler: (status: boolean) => void;
@@ -162,17 +163,7 @@ const File: React.FC<IFile> = ({ showHandler }) => {
 
 		showHandler(false);
 
-		await fetch(
-			`https://messenger-server-production-06a1.up.railway.app/chat/send/photo`,
-			{
-				method: 'POST',
-				mode: 'cors',
-				headers: {
-					Authorization: `Bearer ${token}`,
-				},
-				body: formData,
-			}
-		);
+		const response = await fileService.sendFileMessage({ formData, token });
 	};
 
 	return (
