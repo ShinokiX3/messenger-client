@@ -431,7 +431,13 @@ select:-webkit-autofill:focus {
 	-webkit-box-shadow: 0 0 0px 1000px var(--theme-side-bg-color) inset;
 }
 
+[class*="resize-width"],
+[data-resize-width] {
+	transition: width 0.3s ease-out;
+}
+
 body {
+	transition: width 0.3s ease-out;
 	/* color: rgb(var(--foreground-rgb));
   	background: linear-gradient(
       to bottom,
