@@ -21,6 +21,7 @@ import ContextChat from '@/components/context/chat';
 import ContextSettings from '@/components/context/settings';
 import esourcingService from '@/services/esourcing.service';
 import chatService from '@/services/chat.service';
+import throttle from 'lodash/throttle';
 
 // TODO: temporary solution
 
@@ -54,6 +55,9 @@ export interface IChat {
 
 const MenuUsers: React.FC<IMenuUsers> = ({ type = 'contacts', value = '' }) =>
 	type === 'contacts' ? <FriendsSlider /> : <UsersSearch value={value} />;
+
+const MIN_MENU_WIDTH = 400;
+const MAX_MENU_WIDTH = 600;
 
 const Menu = () => {
 	const [isSearch, setIsSearch] = useState<boolean>(false);
@@ -93,10 +97,23 @@ const Menu = () => {
 		return () => document.removeEventListener('click', windowClickHandler);
 	}, [shouldSettings]);
 
-	const handler = (e: React.MouseEvent<Element, MouseEvent> | MouseEvent) => {
-		const x = e.pageX - 1;
-		setMenuWidth(`${String(x)}px`);
-	};
+	const throttledSetWidth = useMemo(
+        () =>
+            throttle((width: number) => {
+                setMenuWidth(`${width}px`);
+            }, 60),
+        [setMenuWidth]
+    );
+
+	const handler = useCallback(
+        (e: React.MouseEvent<Element, MouseEvent> | MouseEvent) => {
+            const x = e.pageX;
+            // Ограничиваем ширину между MIN_MENU_WIDTH и MAX_MENU_WIDTH
+            const newWidth = Math.max(MIN_MENU_WIDTH, Math.min(MAX_MENU_WIDTH, x));
+            throttledSetWidth(newWidth);
+        },
+        [throttledSetWidth]
+    );
 
 	const clickHandler = useCallback(() => {
 		setIsSearch(true);

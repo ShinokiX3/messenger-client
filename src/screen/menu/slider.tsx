@@ -28,7 +28,8 @@ const Slider: React.FC<ISlider> = ({
 	return (
 		<div
 			ref={ref}
-			className={`absolute h-full w-[0.25rem] cursor-e-resize 
+			className={`absolute h-full w-[0.3rem] cursor-e-resize 
+			hover:w-[0.5rem] transition-width duration-200 ease-in-out
 			select-none ${bgcolor} bg-color-border ${position}`}
 			onMouseDown={(e) => onDownHandler()}
 			onMouseUpCapture={(e) => onUpHandler()}
