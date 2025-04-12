@@ -1,5 +1,5 @@
 'use client';
-import Button from '@/components/button/button';
+import { Button } from '@/components/button/button';
 import { Input } from '@/components/input/personal';
 import { useActions } from '@/hooks/useActions';
 import { useTypedSelector } from '@/hooks/useTypedSelector';

@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { Input } from '@/components/input/personal';
 import { useTypedSelector } from '@/hooks/useTypedSelector';
-import Button from '@/components/button/button';
+import { Button } from '@/components/button/button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/navigation';

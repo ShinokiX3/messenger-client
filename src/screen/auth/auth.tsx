@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { Input, Select, TSelectItem } from '@/components/input/personal';
-import Button from '@/components/button/button';
+import { Button } from '@/components/button/button';
 import { useRouter } from 'next/navigation';
 import { useActions } from '@/hooks/useActions';
 import Spinner from '@/ui/spinner';

@@ -13,7 +13,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import ContextFile from '../context/file';
 import { createPortal } from 'react-dom';
 import File from '../modal/file';
-import Button from '../button/button';
+import { Button } from '../button/button';
 
 const body = document.querySelector('body');
 
