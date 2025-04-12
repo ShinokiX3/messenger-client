@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation';
 import { useActions } from '@/hooks/useActions';
 import { setCookie } from 'nookies';
 import authService from '@/services/auth.service';
+import { formatPhoneToRegular } from '@/utils/phone';
 
 const Login = () => {
 	const [loading, setLoading] = useState<boolean>(false);
@@ -24,7 +25,8 @@ const Login = () => {
 	const handleAuth = async () => {
 		setLoading(true);
 
-		const response = await authService.login({ phone: user.phone, password });
+		const _phone = formatPhoneToRegular(user.phone);
+		const response = await authService.login({ phone: _phone, password });
 
 		if (response.user) {
 			login({ token: response.token, user: response.user[0] });
@@ -33,9 +35,7 @@ const Login = () => {
 		} else {
 			setLoading(false);
 			setRed(true);
-			setTimeout(() => {
-				setRed(false);
-			}, 1000);
+			setTimeout(() => setRed(false), 1000);
 		}
 	};
 

@@ -7,6 +7,7 @@ import { useActions } from '@/hooks/useActions';
 import Spinner from '@/ui/spinner';
 import CountryItem, { countries } from '@/ui/context/variables/country';
 import authService from '@/services/auth.service';
+import { COUNTRY_RULES, formatPhoneNumber, formatPhoneToRegular, validationPhoneNumber } from '@/utils/phone';
 
 // TODO: move to new component / file
 
@@ -25,27 +26,39 @@ const Auth = () => {
 
 	// TODO: move to new file, create special service for these fetches, use it by react query
 
-	const handleSubmit = async () => {
+	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
 		setLoading(true);
 
-		if (phone.length < 13) {
+		const status = validationPhoneNumber(phone, selectedCountry.value);
+
+		if (!status.l_completed) {
 			setLoading(false);
 			setRed(true);
-			setTimeout(() => {
-				setRed(false);
-			}, 1000);
+			setTimeout(() => setRed(false), 1000);
 			return null;
 		}
 
-		const response = await authService.checkPhone({ phone });
+		const _phone = formatPhoneToRegular(phone);
+		const response = await authService.checkPhone({ phone: _phone });
 
-		if (response.statusCode === 200) push('/auth/login');
+		if (response.statusCode === 200) {
+			setUserPhone({ phone });
+			push('/auth/login');
+		}
 		else push('/auth/register');
 	};
 
 	useEffect(() => {
 		setPhone(selectedCountry.value);
 	}, [selectedCountry]);
+
+	const handlePhoneChange = (value: string) => {
+        const formatted = formatPhoneNumber(value, selectedCountry.value);
+        const validation = validationPhoneNumber(formatted, selectedCountry.value);
+
+		if (validation.l <= validation.l_required) setPhone(formatted);
+    };
 
 	return (
 		// <div className="flex pt-[5%] justify-center bg-theme-side-bg-color h-auth-height w-full">
@@ -65,11 +78,7 @@ const Auth = () => {
 			</div>
 			<div>
 				<form
-					onSubmit={(e) => {
-						e.preventDefault();
-						setUserPhone({ phone: phone });
-						handleSubmit();
-					}}
+					onSubmit={handleSubmit}
 					className="flex flex-col gap-[1.5rem]"
 				>
 					<Select
@@ -89,11 +98,7 @@ const Auth = () => {
 						value={phone}
 						red={red}
 						// TODO: create new util function for phone mask
-						handler={(value: string) => {
-							const re = /[^\d+]/gi;
-							const rightValue = value.replace(re, '').substring(0, 13);
-							setPhone(rightValue);
-						}}
+						handler={handlePhoneChange}
 					/>
 					<Button
 						type="regular"
