@@ -15,7 +15,7 @@ const nextConfig = {
 		remotePatterns: [
 			{
 				protocol: 'https',
-				hostname: 'messenger-server-production-06a1.up.railway.app',
+				hostname: 'messenger-server-9lr8.onrender.com',
 				port: '',
 				pathname: '/image/**',
 			},
