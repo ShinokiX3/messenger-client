@@ -4,6 +4,7 @@ import { Input } from '@/components/input/personal';
 import { useActions } from '@/hooks/useActions';
 import { useTypedSelector } from '@/hooks/useTypedSelector';
 import authService from '@/services/auth.service';
+import { formatPhoneToRegular } from '@/utils/phone';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useRouter } from 'next/navigation';
@@ -30,8 +31,6 @@ const Register = () => {
 
 		let allow = name.length < 1 || email.length < 1 || password.length < 1;
 
-		console.log(allow);
-
 		[setRedName, setRedEmail, setRedPassword].forEach((func, index) =>
 			setTimeout(() => {
 				func(false);
@@ -50,7 +49,7 @@ const Register = () => {
 			email,
 			password,
 			name,
-			phone: user.phone,
+			phone: formatPhoneToRegular(user.phone),
 		});
 
 		if (response.token) {

@@ -40,18 +40,19 @@ const Auth = () => {
 		}
 
 		const _phone = formatPhoneToRegular(phone);
+		
 		const response = await authService.checkPhone({ phone: _phone });
+		setUserPhone({ phone });
 
-		if (response.statusCode === 200) {
-			setUserPhone({ phone });
-			push('/auth/login');
-		}
+		if (response.statusCode === 200) push('/auth/login');
 		else push('/auth/register');
 	};
 
 	useEffect(() => {
 		setPhone(selectedCountry.value);
 	}, [selectedCountry]);
+
+	console.log(phone);
 
 	const handlePhoneChange = (value: string) => {
         const formatted = formatPhoneNumber(value, selectedCountry.value);

@@ -26,6 +26,7 @@ const Login = () => {
 		setLoading(true);
 
 		const _phone = formatPhoneToRegular(user.phone);
+		
 		const response = await authService.login({ phone: _phone, password });
 
 		if (response.user) {
