@@ -10,6 +10,7 @@ const initialUser = {
 	password: '',
 	phone: '',
 	role: [''],
+	picture: [],
 	__v: 0,
 	_id: '',
 };
@@ -20,6 +21,7 @@ const initialUI: IUISettings = {
 	shouldHideMenu: false,
 	shouldHideContent: false,
 	shouldShowSettings: false,
+	shouldShowProfile: false,
 };
 
 const initialState: IUserInitialState = {
@@ -87,6 +89,14 @@ export const userSlice = createSlice({
 		
 		setShouldShowSettings: (state, action: PayloadAction<boolean>) => {
 			state.ui.shouldShowSettings = action.payload;
+		},
+
+		setShouldShowProfile: (state, action: PayloadAction<boolean>) => {
+			state.ui.shouldShowProfile = action.payload;
+		},
+
+		updateUserPhotos: (state, action: PayloadAction<string>) => {
+			state.user.picture = [action.payload, ...state.user.picture];
 		},
 
 		reset: (state) => {

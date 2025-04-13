@@ -57,6 +57,7 @@ const MenuChats: React.FC<IMenuChats> = ({
 						last: { from: chat.last.from, message: chat.last.message },
 						time: new Date(chat.last.writed),
 						read: null,
+						picture: chat.picture,
 						pinned: chat.pinned,
 					},
 				};
@@ -89,7 +90,7 @@ const MenuChats: React.FC<IMenuChats> = ({
 		// if (x + blockW < oW && x - blockW < 0) return `${x + 220}px`;
 		else return `${x}px`;
 	};
-
+	
 	if (loading && !flag.current)
 		return (
 			<MenuWrapper>

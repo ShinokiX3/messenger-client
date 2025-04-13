@@ -6,6 +6,7 @@ export interface IUser {
 	password: string;
 	phone: string;
 	role: string[];
+	picture: string[];
 	__v: number;
 	_id: string;
 }
@@ -16,6 +17,7 @@ export interface IUISettings {
 	shouldHideContent: boolean;
 	shouldHideMenu: boolean;
 	shouldShowSettings: boolean;
+	shouldShowProfile: boolean;
 }
 
 export interface IUserInitialState {

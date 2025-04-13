@@ -6,6 +6,11 @@ export interface SendFileMessage {
     token: string;
 }
 
+export interface ChangeProfilePicture {
+    formData: FormData;
+    token: string;
+}
+
 export interface SendFileMessageResponse {
     userId: string,
     messageId: string,
@@ -43,6 +48,25 @@ class FileService {
                 }
             );
 
+            return response;
+        } catch (error) {
+            throw new Error();
+        }
+    }
+
+    async changeProfilePicture({ formData, token }: ChangeProfilePicture): Promise<Response> {
+        try {
+            const response = await fetch(`${SOURCE}/users/profile/photo`,
+                {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: formData,
+                }
+            );
+            
             return response;
         } catch (error) {
             throw new Error();

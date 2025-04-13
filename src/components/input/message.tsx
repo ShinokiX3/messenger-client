@@ -112,10 +112,6 @@ export const Message: React.FC<IMessage> = ({
 		return () => document.removeEventListener('click', handleWindowClick);
 	}, [filePicker]);
 
-	useEffect(() => {
-		console.log(showFileModal);
-	}, [showFileModal]);
-
 	return (
 		<div className="flex items-center justify-center w-full gap-[0.5rem]">
 			<div className="relative w-full shadow-message-shadow" style={styles}>

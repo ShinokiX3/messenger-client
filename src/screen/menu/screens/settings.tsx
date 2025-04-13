@@ -17,6 +17,9 @@ import { staticBlurDataUrl } from "@/utils/staticBlurDataUrl";
 import { useMemo, useState } from "react";
 import { useActions } from "@/hooks/useActions";
 import { useTypedSelector } from "@/hooks/useTypedSelector";
+import { BackButton } from "../ui/button";
+import { SOURCE } from "@/services/sources.const";
+import MenuWrapper from "../wrapper";
 
 interface Control {
     icon: IconDefinition;
@@ -45,7 +48,10 @@ export const Settings: React.FC = () => {
     });
 
     const { user } = useTypedSelector(state => state.user);
-    const { setShouldShowSettings } = useActions();
+    const { 
+        setShouldShowSettings,
+        setShouldShowProfile
+    } = useActions();
 
     const controls = useMemo(() => {
         return [
@@ -55,19 +61,16 @@ export const Settings: React.FC = () => {
         ]
     }, [user])
 
+    console.log(user);
+
     return (
         <Section>
 			<Header>
 				<div className="flex items-center gap-3 w-full">
-					<IconButton style={{ padding: '20px' }} onClick={() => setShouldShowSettings(false)}>
-						<FontAwesomeIcon
-							className="text-color-message text-large-font-size search-ico-rotate-effect"
-							icon={faArrowLeft}
-						/>
-					</IconButton>
+					<BackButton onClick={() => setShouldShowSettings(false)} />
 					<Text size='xl' bold>Settings</Text>
 					<div className='flex justify-end w-full'>
-						<IconButton>
+						<IconButton onClick={() => setShouldShowProfile(true)}>
 							<FontAwesomeIcon icon={faPencil} />
 						</IconButton>
 						<IconButton>
@@ -76,27 +79,29 @@ export const Settings: React.FC = () => {
 					</div>
 				</div>
 			</Header>
-			<div className="flex flex-col">
-				<div className='flex relative'>
-					<Image
-						src={image.url}
-						alt="User picture"
-						width={200}
-						height={200}
-						sizes="100vw"
-						placeholder="blur"
-						blurDataURL={image.placeholder || staticBlurDataUrl()}
-						style={{ width: '100%', height: 'auto' }}
-					/>
-                    <div className="absolute bottom-[15px] left-[25px]">
-                        <Text size="xl" bold>{user.name}</Text>
-                        <Text size="m">Last seen recently...</Text>
+			<MenuWrapper>
+                <div className="flex flex-col">
+                    <div className='flex relative'>
+                        <Image
+                            src={user.picture[0] ? `${SOURCE}/${user.picture[0]}` : image.url}
+                            alt="User picture"
+                            width={200}
+                            height={200}
+                            sizes="100vw"
+                            placeholder={"blur"}
+                            blurDataURL={image.placeholder || staticBlurDataUrl()}
+                            style={{ width: '100%', height: 'auto' }}
+                        />
+                        <div className="absolute bottom-[15px] left-[25px]">
+                            <Text size="xl" bold>{user.name}</Text>
+                            <Text size="m">Last seen recently...</Text>
+                        </div>
                     </div>
-				</div>
-				<div className='flex flex-col h-[20dvh] p-2 gap-3'>
-                    {controls.map((control) => <Control key={control.type} {...control} /> )}
+                    <div className='flex flex-col h-[20dvh] p-2 gap-3'>
+                        {controls.map((control) => <Control key={control.type} {...control} /> )}
+                    </div>
                 </div>
-			</div>
+            </MenuWrapper>
 		</Section>
     );
 };

@@ -17,6 +17,8 @@ import socketService from '@/services/socket.service';
 import chatService from '@/services/chat.service';
 import Image from 'next/image';
 import { emptyChatURL } from '@/utils/emptyChat';
+import { staticBlurDataUrl } from '@/utils/staticBlurDataUrl';
+import { SOURCE } from '@/services/sources.const';
 
 export type TMessageUnreadImportance = 'regular' | 'important';
 export type TMessageDeliveryStatus = 'sended' | 'read';
@@ -85,11 +87,17 @@ const Content: React.FC<IContent> = ({ clear = false, room }) => {
 	const [joined, setJoined] = useState(false);
 	const messageLastRef = useRef<null | HTMLDivElement>(null);
 	const [chatInfo, setChatInfo] = useState<[IChat, IUser[]] | []>([]);
+	const [image, setImage] = useState<{ url: string; placeholder: string }>({
+		url: staticBlurDataUrl(),
+		placeholder: '',
+	});
 
 	const { user, token, ui } = useTypedSelector((state) => state.user);
 	const { setShouldHideMenu, setShouldHideContent, setSocket } = useActions();
 
 	// TODO: remove socket from global store
+
+	const chatPicture = useMemo(() => chatInfo?.[1]?.[1]?.picture[0], [chatInfo])
 
 	useEffect(() => {
 		setSocket({ socket: '', chatId: room ? room : '', userId: user._id });
@@ -103,6 +111,7 @@ const Content: React.FC<IContent> = ({ clear = false, room }) => {
 			});
 
 			setChatInfo([response[0], response[1].map((item: any) => item[0])]);
+			console.log(response);
 		})();
 	}, []);
 
@@ -243,10 +252,21 @@ const Content: React.FC<IContent> = ({ clear = false, room }) => {
 						<FontAwesomeIcon icon={faArrowLeft} />
 					</ControlWrapper>
 					<div
-						className="rounded-[50%] bg-white 
+						className="rounded-[50%]
                         w-preview-image-sm-w h-preview-image-sm-h
                         mr-[0.625rem]"
-					></div>
+					>
+						<Image
+                            src={chatPicture ? `${SOURCE}/${chatPicture}` : image.url}
+                            alt="User picture"
+                            width={200}
+                            height={200}
+							placeholder={"blur"}
+                            blurDataURL={image.placeholder || staticBlurDataUrl()}
+                            className="rounded-full object-cover"
+                            style={{ width: 'inherit', height: 'inherit' }}
+                        />
+					</div>
 					<div className="flex flex-col justify-center items-start">
 						<p className="font-medium text-[1.125rem] leading-none">{title}</p>
 						<p className="text-[0.875rem] text-color-message">

@@ -1,5 +1,5 @@
 'use client';
-import React, { memo, useRef } from 'react';
+import React, { memo, useRef, useState } from 'react';
 import {
 	faThumbtack,
 	faCheck,
@@ -13,6 +13,9 @@ import { ripple } from '@/utils/ripple';
 import { useTypedSelector } from '@/hooks/useTypedSelector';
 import { useActions } from '@/hooks/useActions';
 import chatService from '@/services/chat.service';
+import Image from 'next/image';
+import { SOURCE } from '@/services/sources.const';
+import { staticBlurDataUrl } from '@/utils/staticBlurDataUrl';
 
 export type TType = 'chat' | 'group' | 'channel';
 export type TMessageDeliveryStatus = 'sended' | 'read' | null;
@@ -35,6 +38,11 @@ export interface IPreview {
 	source: string;
 	last: ILast;
 	time: Date;
+	picture?: string[];
+	participants?: [
+		{ id: string; title: string },
+		{ asking_picture: string; stranger_picture: string }
+	]
 	read: IRead | null;
 	pinned: boolean;
 }
@@ -106,9 +114,13 @@ const Preview: React.FC<IPreviewComponent> = ({
 }) => {
 	const previewRef = useRef(null);
 	const router = useRouter();
-
+	const [image, setImage] = useState<{ url: string; placeholder: string }>({
+		url: staticBlurDataUrl(),
+		placeholder: '',
+	});
+	
 	const { setShouldHideContent, setShouldHideMenu } = useActions();
-	const token = useTypedSelector((state) => state.user.token);
+	const { user, token } = useTypedSelector((state) => state.user);
 
 	const handleRoute = async () => {
 		if (data.id.length < 11) {
@@ -122,7 +134,7 @@ const Preview: React.FC<IPreviewComponent> = ({
 			router.push('/a/' + response[0].chatId);
 		}
 	};
-
+	
 	return (
 		<div
 			onClick={() => {
@@ -148,10 +160,18 @@ const Preview: React.FC<IPreviewComponent> = ({
 			>
 				<div className="w-preview-image-w h-preview-image-h mr-ico-margin-right">
 					<div
-						className="w-preview-image-w h-preview-image-h rounded-[50%] 
-						bg-gradient-to-r from-white-500 to-red-500 bg-white"
+						className="w-preview-image-w h-preview-image-h rounded-[50%]"
 					>
-						{/* Image */}
+						<Image
+                            src={data.picture?.[0] ? `${SOURCE}/${data.picture[0]}` : image.url}
+                            alt="User picture"
+                            width={200}
+                            height={200}
+							placeholder={"blur"}
+                            blurDataURL={image.placeholder || staticBlurDataUrl()}
+                            className="rounded-full object-cover"
+                            style={{ width: 'inherit', height: 'inherit' }}
+                        />
 					</div>
 				</div>
 				<div className="flex flex-col justify-center w-full">

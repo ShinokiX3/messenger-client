@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 
-export type TextSize = 'm' | 'l' | 'xl';
+export type TextSize = 'm' | 'l' | 'lm' | 'xl';
 export type TextColor = 'gray' | 'default';
 
 interface TextProps {
@@ -15,6 +15,7 @@ interface TextProps {
 const sizes = {
     'm': '14px',
     'l': '16px',
+    'lm': '18px',
     'xl': '22px',
 }
 
@@ -39,7 +40,7 @@ export const Text = (props: TextProps) => {
         fontWeight: bold ? 600 : 400,
         color: colors[color],
         overflowWrap: wrap ? "anywhere" : "initial"
-    }), [size, bold, wrap])
+    }), [size, bold, wrap, color])
 
     return (
         <p style={styles} className={`${className}`} {...other}>
