@@ -97,7 +97,9 @@ const Content: React.FC<IContent> = ({ clear = false, room }) => {
 
 	// TODO: remove socket from global store
 
-	const chatPicture = useMemo(() => chatInfo?.[1]?.[1]?.picture[0], [chatInfo])
+	console.log(chatInfo);
+
+	const chatPicture = useMemo(() => chatInfo?.[1]?.[0]?.picture[0], [chatInfo])
 
 	useEffect(() => {
 		setSocket({ socket: '', chatId: room ? room : '', userId: user._id });
