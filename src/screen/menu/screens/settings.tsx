@@ -20,6 +20,7 @@ import { useTypedSelector } from "@/hooks/useTypedSelector";
 import { BackButton } from "../ui/button";
 import { SOURCE } from "@/services/sources.const";
 import MenuWrapper from "../wrapper";
+import ContextLogout from "@/components/context/logout";
 
 interface Control {
     icon: IconDefinition;
@@ -46,6 +47,7 @@ export const Settings: React.FC = () => {
         url: staticBlurDataUrl(),
         placeholder: '',
     });
+    const [shouldLogout, setShouldLogout] = useState(false);
 
     const { user } = useTypedSelector(state => state.user);
     const { 
@@ -69,12 +71,15 @@ export const Settings: React.FC = () => {
 				<div className="flex items-center gap-3 w-full">
 					<BackButton onClick={() => setShouldShowSettings(false)} />
 					<Text size='xl' bold>Settings</Text>
-					<div className='flex justify-end w-full'>
+					<div className='flex justify-end w-full relative'>
 						<IconButton onClick={() => setShouldShowProfile(true)}>
 							<FontAwesomeIcon icon={faPencil} />
 						</IconButton>
-						<IconButton>
+						<IconButton onClick={() => setShouldLogout(!shouldLogout)}>
 							<FontAwesomeIcon icon={faEllipsisVertical} />
+                            { shouldLogout 
+                                && <ContextLogout styles={{ padding: '5px', left: 'initial', right: '0', top: '50', width: '225px' }} /> 
+                            }
 						</IconButton>
 					</div>
 				</div>

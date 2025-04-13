@@ -1,6 +1,5 @@
 'use client';
 import React, { useState } from 'react';
-import Image from 'next/image';
 import { Input } from '@/components/input/personal';
 import { useTypedSelector } from '@/hooks/useTypedSelector';
 import { Button } from '@/components/button/button';

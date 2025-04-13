@@ -46,7 +46,7 @@ export const userSlice = createSlice({
 			state.user = user;
 		},
 
-		quit: (state, _) => {
+		quit: (state) => {
 			state.token = '';
 			state.user = initialUser;
 		},
